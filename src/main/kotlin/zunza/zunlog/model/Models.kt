@@ -4,16 +4,27 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import zunza.zunlog.dto.CreatePostDTO
 import java.time.Instant
 
 @Entity
 class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long = 0,
     var title: String,
     var content: String,
     val writer: String,
-    var createdDt: Instant,
-    var updatedDt: Instant,
-)
+    var createdDt: Instant = Instant.now(),
+    var updatedDt: Instant = Instant.now(),
+) {
+    companion object {
+        fun from(createPostDTO: CreatePostDTO): Post {
+            return Post(
+                title = createPostDTO.title,
+                content = createPostDTO.title,
+                writer = createPostDTO.writer
+            )
+        }
+    }
+}
