@@ -4,6 +4,7 @@ plugins {
 	kotlin("plugin.jpa") version "1.9.24"
 	kotlin("jvm") version "1.9.24"
 	kotlin("plugin.spring") version "1.9.24"
+	kotlin("kapt") version "1.9.24"
 }
 
 group = "zunza"
@@ -25,6 +26,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+	// querydsl 의존성 설치
+	implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
+	kapt("com.querydsl:querydsl-apt:5.1.0:jakarta")
 
 
 	runtimeOnly("com.mysql:mysql-connector-j")
