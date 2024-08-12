@@ -30,3 +30,8 @@ data class PostDTO(
         }
     }
 }
+
+data class UpdatePostDTO(
+    val title: String,
+    val content: String
+)
