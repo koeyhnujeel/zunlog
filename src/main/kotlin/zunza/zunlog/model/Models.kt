@@ -13,12 +13,13 @@ class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    private var title: String,
-    private var content: String,
+    var title: String,
+    var content: String,
     val writer: String,
     var createdDt: Instant = Instant.now(),
     var updatedDt: Instant = Instant.now(),
 ) {
+
     fun update(updatePostDTO: UpdatePostDTO) {
         this.title = updatePostDTO.title
         this.content = updatePostDTO.content
@@ -28,7 +29,7 @@ class Post(
         fun from(createPostDTO: CreatePostDTO): Post {
             return Post(
                 title = createPostDTO.title,
-                content = createPostDTO.title,
+                content = createPostDTO.content,
                 writer = createPostDTO.writer
             )
         }
