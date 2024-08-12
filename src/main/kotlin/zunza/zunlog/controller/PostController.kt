@@ -2,6 +2,7 @@ package zunza.zunlog.controller
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -53,6 +54,12 @@ class PostController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updatePost(@PathVariable id: Long, @RequestBody updatePostDTO: UpdatePostDTO) {
         postService.updatePost(id, updatePostDTO)
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deletePost(@PathVariable id: Long) {
+        postService.deletePost(id)
     }
 
 }

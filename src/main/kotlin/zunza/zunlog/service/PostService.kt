@@ -38,4 +38,11 @@ class PostService(
 
         post.update(updatePostDTO)
     }
+
+    fun deletePost(id: Long) {
+        val post = postRepository.findById(id).orElseThrow {
+            throw IllegalArgumentException("존재하지 않는 게시글입니다.")
+        }
+        postRepository.deleteById(post.id)
+    }
 }
