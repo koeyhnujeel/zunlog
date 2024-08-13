@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 import zunza.zunlog.dto.CreatePostDTO
 import zunza.zunlog.dto.PostDTO
 import zunza.zunlog.dto.UpdatePostDTO
+import zunza.zunlog.exception.PostNotFoundException
 import zunza.zunlog.model.Post
 import zunza.zunlog.repository.PostRepository
 
@@ -25,7 +26,7 @@ class PostService(
 
     fun getPost(id: Long): PostDTO {
         val post = postRepository.findById(id).orElseThrow {
-            throw IllegalArgumentException("존재하지 않는 게시글입니다.")
+            throw PostNotFoundException()
         }
         return PostDTO.from(post)
     }
@@ -33,7 +34,7 @@ class PostService(
     @Transactional
     fun updatePost(id: Long, updatePostDTO: UpdatePostDTO) {
         val post = postRepository.findById(id).orElseThrow {
-            throw IllegalArgumentException("존재하지 않는 게시글입니다.")
+            throw PostNotFoundException()
         }
 
         post.update(updatePostDTO)
@@ -41,7 +42,7 @@ class PostService(
 
     fun deletePost(id: Long) {
         val post = postRepository.findById(id).orElseThrow {
-            throw IllegalArgumentException("존재하지 않는 게시글입니다.")
+            throw PostNotFoundException()
         }
         postRepository.deleteById(post.id)
     }
