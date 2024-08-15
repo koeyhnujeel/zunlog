@@ -53,3 +53,14 @@ data class CreateUserDTO(
     val password: String,
     val nickname: String,
 )
+
+data class CreateSubscriptionDTO(
+    val targetId: Long,
+    val subscriberId: Long
+) {
+    companion object {
+        fun of(targetId: Long, subscriberId: Long): CreateSubscriptionDTO {
+            return CreateSubscriptionDTO(targetId = targetId, subscriberId = subscriberId)
+        }
+    }
+}
