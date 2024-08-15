@@ -2,15 +2,16 @@ package zunza.zunlog.service
 
 import org.springframework.stereotype.Service
 import zunza.zunlog.dto.CreateSubscriptionDTO
+import zunza.zunlog.dto.RemoveSubscriptionDTO
 import zunza.zunlog.exception.SelfSubscriptionException
 import zunza.zunlog.exception.UserNotFoundException
 import zunza.zunlog.model.Subscription
-import zunza.zunlog.repository.SubscribeRepository
+import zunza.zunlog.repository.SubscriptionRepository
 import zunza.zunlog.repository.UserRepository
 
 @Service
-class SubscribeService(
-    private val subscribeRepository: SubscribeRepository,
+class SubscriptionService(
+    private val subscriptionRepository: SubscriptionRepository,
     private val userRepository: UserRepository,
 ) {
     fun subscribe(createSubscriptionDTO: CreateSubscriptionDTO) {
@@ -23,6 +24,14 @@ class SubscribeService(
         }
 
         val subscription = Subscription.of(targetUser.id, createSubscriptionDTO.subscriberId)
-        subscribeRepository.save(subscription)
+        subscriptionRepository.save(subscription)
+    }
+
+    fun unsubscribe(removeSubscriptionDTO: RemoveSubscriptionDTO) {
+        val subscription = subscriptionRepository.findByTargetIdAndSubscriberId(
+            removeSubscriptionDTO.targetId,
+            removeSubscriptionDTO.subscriberId
+        )
+        subscriptionRepository.delete(subscription)
     }
 }

@@ -5,5 +5,6 @@ import org.springframework.stereotype.Repository
 import zunza.zunlog.model.Subscription
 
 @Repository
-interface SubscribeRepository: JpaRepository<Subscription, Long> {
+interface SubscriptionRepository: JpaRepository<Subscription, Long> {
+    fun findByTargetIdAndSubscriberId(targetId: Long, subscriberId: Long): Subscription
 }

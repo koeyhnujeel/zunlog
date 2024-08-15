@@ -64,3 +64,14 @@ data class CreateSubscriptionDTO(
         }
     }
 }
+
+data class RemoveSubscriptionDTO(
+    val targetId: Long,
+    val subscriberId: Long
+) {
+    companion object {
+        fun of(targetId: Long, subscriberId: Long): RemoveSubscriptionDTO {
+            return RemoveSubscriptionDTO(targetId = targetId, subscriberId = subscriberId)
+        }
+    }
+}
