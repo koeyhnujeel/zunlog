@@ -4,7 +4,6 @@ import jakarta.persistence.*
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import zunza.zunlog.dto.CreatePostDTO
-import zunza.zunlog.dto.CreateUserDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import java.time.Instant
 
@@ -16,8 +15,12 @@ class Post(
     val id: Long = 0,
     var title: String,
     var content: String,
-    val writer: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_Id")
+    val user: User,
     val createdDt: Instant = Instant.now(),
+
     @LastModifiedDate
     var updatedDt: Instant = Instant.now(),
 ) {
@@ -32,7 +35,7 @@ class Post(
             return Post(
                 title = createPostDTO.title,
                 content = createPostDTO.content,
-                writer = createPostDTO.writer
+                user = createPostDTO.user
             )
         }
     }
