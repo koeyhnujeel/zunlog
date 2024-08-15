@@ -70,6 +70,22 @@ class User(
     }
 }
 
+@Entity
+class Subscription(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
+    val targetId: Long,
+    val subscriberId: Long,
+    val createdDt: Instant = Instant.now()
+) {
+    companion object {
+        fun of(targetId: Long, subscriberId: Long): Subscription {
+            return Subscription(targetId = targetId, subscriberId = subscriberId)
+        }
+    }
+}
+
 
 
 
