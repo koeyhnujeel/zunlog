@@ -2,6 +2,7 @@ package zunza.zunlog.controller
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController
 import zunza.zunlog.dto.CreatePostDTO
 import zunza.zunlog.dto.PostDTO
 import zunza.zunlog.dto.UpdatePostDTO
+import zunza.zunlog.request.CreatePostRequest
+import zunza.zunlog.security.UserDetails
 import zunza.zunlog.service.PostService
 
 @RestController
@@ -26,8 +29,10 @@ class PostController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createPost(
-        @RequestBody createPostDTO: CreatePostDTO
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @RequestBody createPostRequest: CreatePostRequest
     ) {
+        val createPostDTO = CreatePostDTO.of(userDetails.getUser(), createPostRequest)
         postService.writePost(createPostDTO)
     }
 
@@ -61,5 +66,4 @@ class PostController(
     fun deletePost(@PathVariable id: Long) {
         postService.deletePost(id)
     }
-
 }

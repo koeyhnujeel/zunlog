@@ -1,13 +1,25 @@
 package zunza.zunlog.dto
 
 import zunza.zunlog.model.Post
+import zunza.zunlog.model.User
+import zunza.zunlog.request.CreatePostRequest
 import java.time.Instant
 
 data class CreatePostDTO(
+    val user: User,
     val title: String,
     val content: String,
-    val writer: String
-)
+) {
+    companion object {
+        fun of(user: User, createPostRequest: CreatePostRequest): CreatePostDTO {
+            return CreatePostDTO(
+                user = user,
+                title = createPostRequest.title,
+                content = createPostRequest.content
+            )
+        }
+    }
+}
 
 data class PostDTO(
     val id: Long,
@@ -23,7 +35,7 @@ data class PostDTO(
                 id = post.id,
                 title = post.title,
                 content = post.content,
-                writer = post.writer,
+                writer = post.user.nickname,
                 createdDt = post.createdDt,
                 updatedDt = post.updatedDt
             )

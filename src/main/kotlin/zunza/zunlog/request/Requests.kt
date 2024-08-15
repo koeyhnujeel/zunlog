@@ -1,4 +1,7 @@
 package zunza.zunlog.request
 
-class CreatePostRequest {
-}
+
+data class CreatePostRequest(
+    val title: String,
+    val content: String,
+)
