@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import zunza.zunlog.jwt.JwtUtil
-import zunza.zunlog.security.UserDetailsService
+import zunza.zunlog.service.UserDetailsService
 
 
 data class AuthRequest(

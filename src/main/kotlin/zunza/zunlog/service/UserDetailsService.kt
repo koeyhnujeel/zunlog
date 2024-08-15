@@ -1,11 +1,11 @@
-package zunza.zunlog.security
+package zunza.zunlog.service
 
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import org.springframework.security.core.userdetails.UserDetailsService
 import zunza.zunlog.exception.UserNotFoundException
 import zunza.zunlog.repository.UserRepository
-import zunza.zunlog.security.UserDetails as CustomUserDetails
+import zunza.zunlog.config.UserDetails as CustomUserDetails
 
 @Service
 class UserDetailsService(private val userRepository: UserRepository):

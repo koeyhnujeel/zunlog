@@ -1,4 +1,4 @@
-package zunza.zunlog.security
+package zunza.zunlog.config
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

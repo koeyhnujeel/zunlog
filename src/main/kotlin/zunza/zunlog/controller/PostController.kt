@@ -17,7 +17,7 @@ import zunza.zunlog.dto.CreatePostDTO
 import zunza.zunlog.dto.PostDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import zunza.zunlog.request.CreatePostRequest
-import zunza.zunlog.security.UserDetails
+import zunza.zunlog.config.UserDetails
 import zunza.zunlog.service.PostService
 
 @RestController

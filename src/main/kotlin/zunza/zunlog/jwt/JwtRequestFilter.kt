@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import zunza.zunlog.security.UserDetailsService
+import zunza.zunlog.service.UserDetailsService
 
 @Component
 class JwtRequestFilter(

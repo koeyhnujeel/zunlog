@@ -8,7 +8,7 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
-import zunza.zunlog.security.UserDetailsService
+import zunza.zunlog.service.UserDetailsService
 import java.time.Instant
 import java.util.*
 import javax.crypto.SecretKey

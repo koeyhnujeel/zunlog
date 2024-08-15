@@ -24,6 +24,7 @@ class SecurityConfig {
             .authorizeHttpRequests {authorize ->
                 authorize
                     .requestMatchers(HttpMethod.POST, "/posts").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/subscribe").authenticated()
                     .anyRequest().permitAll()
             }
         return http.build()
