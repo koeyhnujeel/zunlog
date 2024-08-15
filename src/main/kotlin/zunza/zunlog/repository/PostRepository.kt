@@ -4,7 +4,9 @@ import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Projections
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import zunza.zunlog.dto.PostDTO
 import zunza.zunlog.model.Post
@@ -12,6 +14,12 @@ import zunza.zunlog.model.QPost
 
 @Repository
 interface PostRepository: JpaRepository<Post, Long>, PostRepositoryCustom {
+
+    @Query("SELECT p " +
+            "FROM Post p " +
+            "JOIN FETCH p.user " +
+            "WHERE p.id = :id")
+    fun findByIdFetchUser(@Param("id") id: Long): Post?
 }
 
 interface  PostRepositoryCustom {
@@ -25,7 +33,7 @@ class PostRepositoryCustomImpl : PostRepositoryCustom, QuerydslRepositorySupport
 
         when (condition) {
             "title" -> builder.and(post.title.contains(value))
-            "writer" -> builder.and(post.writer.eq(value))
+            "writer" -> builder.and(post.user.nickname.eq(value))
         }
 
         return from(post)
@@ -35,7 +43,7 @@ class PostRepositoryCustomImpl : PostRepositoryCustom, QuerydslRepositorySupport
                     post.id,
                     post.title,
                     post.content,
-                    post.writer,
+                    post.user.nickname,
                     post.createdDt,
                     post.updatedDt
                 )

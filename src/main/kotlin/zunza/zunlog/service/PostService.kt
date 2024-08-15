@@ -25,9 +25,7 @@ class PostService(
     }
 
     fun getPost(id: Long): PostDTO {
-        val post = postRepository.findById(id).orElseThrow {
-            throw PostNotFoundException()
-        }
+        val post = postRepository.findByIdFetchUser(id) ?: throw PostNotFoundException()
         return PostDTO.from(post)
     }
 
