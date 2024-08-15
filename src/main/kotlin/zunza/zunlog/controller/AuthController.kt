@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import zunza.zunlog.jwt.JwtUtil
-import zunza.zunlog.security.MemberDetailsService
+import zunza.zunlog.security.UserDetailsService
 
 
 data class AuthRequest(
@@ -14,14 +14,14 @@ data class AuthRequest(
 )
 @RestController
 class AuthController(
-    private val memberDetailsService: MemberDetailsService,
+    private val userDetailsService: UserDetailsService,
     private val passwordEncoder: PasswordEncoder,
     private val jwtUtil: JwtUtil
 ) {
 
     @PostMapping("/login")
     fun authenticate(@RequestBody authRequest: AuthRequest): String {
-        val userDetails = memberDetailsService.loadUserByUsername(authRequest.email)
+        val userDetails = userDetailsService.loadUserByUsername(authRequest.email)
 
         val claims = hashMapOf(
             "email" to authRequest.email,
