@@ -4,7 +4,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import zunza.zunlog.model.User
 
-class MemberDetails(
+class UserDetailss(
     private val user: User,
 ): UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
@@ -17,6 +17,14 @@ class MemberDetails(
 
     override fun getUsername(): String {
         return user.email
+    }
+
+    fun getUserId(): Long {
+        return user.id
+    }
+
+    fun getUser(): User {
+        return user
     }
 
     override fun isAccountNonExpired(): Boolean {

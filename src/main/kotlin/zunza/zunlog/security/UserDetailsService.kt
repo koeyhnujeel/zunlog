@@ -7,14 +7,13 @@ import zunza.zunlog.exception.UserNotFoundException
 import zunza.zunlog.repository.UserRepository
 
 @Service
-class MemberDetailsService(private val userRepository: UserRepository): UserDetailsService {
+class CustomUserDetailsService(private val userRepository: UserRepository): UserDetailsService {
     override fun loadUserByUsername(email: String?): UserDetails {
         if (email.isNullOrEmpty()) {
             throw UserNotFoundException()
         }
         val user = userRepository.findByEmail(email) ?: throw UserNotFoundException()
 
-
-        return zunza.zunlog.security.MemberDetails(user)
+        return zunza.zunlog.security.CustomUserDetails(user)
     }
 }
