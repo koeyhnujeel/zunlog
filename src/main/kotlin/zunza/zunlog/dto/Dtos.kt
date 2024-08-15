@@ -35,3 +35,9 @@ data class UpdatePostDTO(
     val title: String,
     val content: String
 )
+
+data class CreateUserDTO(
+    val email: String,
+    val password: String,
+    val nickname: String,
+)
