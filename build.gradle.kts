@@ -31,6 +31,11 @@ dependencies {
 	implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
 	kapt("com.querydsl:querydsl-apt:5.1.0:jakarta")
 
+	// 스프링 시큐리티
+	implementation("org.springframework.boot:spring-boot-starter-security")
+
+	//jwt
+	implementation("io.jsonwebtoken:jjwt:0.12.5")
 
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
