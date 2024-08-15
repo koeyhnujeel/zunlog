@@ -6,12 +6,12 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import zunza.zunlog.security.MemberDetailsService
+import zunza.zunlog.security.UserDetailsService
 
 @Component
 class JwtRequestFilter(
     private val jwtUtil: JwtUtil,
-    private val memberDetailsService: MemberDetailsService
+    private val userDetailsService: UserDetailsService
 ): OncePerRequestFilter() {
 
     override fun doFilterInternal(

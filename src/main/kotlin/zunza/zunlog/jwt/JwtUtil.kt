@@ -8,7 +8,7 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
-import zunza.zunlog.security.MemberDetailsService
+import zunza.zunlog.security.UserDetailsService
 import java.time.Instant
 import java.util.*
 import javax.crypto.SecretKey
@@ -16,7 +16,7 @@ import kotlin.collections.HashMap
 
 @Component
 class JwtUtil(
-    private val memberDetailsService: MemberDetailsService
+    private val userDetailsService: UserDetailsService
 ) {
     val secretKey = "abcdefghijklmnopqrstuvwxyz1234567890"
 
@@ -65,7 +65,7 @@ class JwtUtil(
 
     fun getAuthentication(token: String): Authentication {
         val claims = getClaims(token)
-        val userDetails = memberDetailsService.loadUserByUsername(claims.payload.subject)
+        val userDetails = userDetailsService.loadUserByUsername(claims.payload.subject)
         return UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
     }
 }

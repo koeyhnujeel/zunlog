@@ -4,7 +4,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import zunza.zunlog.model.User
 
-class UserDetailss(
+class UserDetails(
     private val user: User,
 ): UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
