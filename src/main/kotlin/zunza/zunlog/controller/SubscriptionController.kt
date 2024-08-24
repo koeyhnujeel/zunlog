@@ -15,7 +15,7 @@ import zunza.zunlog.service.SubscriptionService
 
 @RestController
 @RequestMapping("/subscriptions")
-class SubscribeController(
+class SubscriptionController(
     private val subscriptionService: SubscriptionService
 ) {
 
