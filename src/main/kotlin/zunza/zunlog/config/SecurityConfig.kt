@@ -26,6 +26,7 @@ class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/posts").authenticated()
                     .requestMatchers(HttpMethod.POST, "/subscriptions/**").authenticated()
                     .requestMatchers(HttpMethod.DELETE, "/subscriptions/**").authenticated()
+                    .requestMatchers(HttpMethod.GET, "/connect").authenticated()
                     .anyRequest().permitAll()
             }
         return http.build()
