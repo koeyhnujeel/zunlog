@@ -1,5 +1,7 @@
 package zunza.zunlog.controller
 
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,7 +22,7 @@ class AuthController(
 ) {
 
     @PostMapping("/login")
-    fun authenticate(@RequestBody authRequest: AuthRequest): String {
+    fun authenticate(@RequestBody authRequest: AuthRequest): HashMap<String, String> {
         val userDetails = userDetailsService.loadUserByUsername(authRequest.email)
 
         val claims = hashMapOf(
@@ -28,10 +30,13 @@ class AuthController(
             "role" to userDetails.authorities.first().authority
         )
 
+        val response = hashMapOf<String, String>()
         if (passwordEncoder.matches(authRequest.password, userDetails.password)) {
-            return jwtUtil.generateToken(authRequest.email, claims)
+            response["token"] = jwtUtil.generateToken(authRequest.email, claims)
+            return response
         }
 
-        return "Authentication Failed"
+        response["token"] = "Authentication Failed"
+        return response
     }
 }
