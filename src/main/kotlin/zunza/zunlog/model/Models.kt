@@ -3,6 +3,7 @@ package zunza.zunlog.model
 import jakarta.persistence.*
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import zunza.zunlog.Enum.IsRead
 import zunza.zunlog.dto.CreatePostDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import java.time.Instant
@@ -13,8 +14,8 @@ class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    var title: String,
-    var content: String,
+    title: String,
+    content: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_Id")
@@ -24,6 +25,12 @@ class Post(
     @LastModifiedDate
     var updatedDt: Instant = Instant.now(),
 ) {
+
+    var title = title
+        private set
+
+    var content = content
+        private set
 
     fun update(updatePostDTO: UpdatePostDTO) {
         this.title = updatePostDTO.title
@@ -48,13 +55,16 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     val email: String,
-    private var password: String,
+    password: String,
     val nickname: String,
     val role: String = "ROLE_USER",
     val createdDt: Instant = Instant.now(),
     @LastModifiedDate
     var updatedDt: Instant = Instant.now()
 ) {
+
+    var password = password
+        private set
     companion object {
         fun of(email: String, password: String, nickname: String): User {
             return User(
@@ -63,10 +73,6 @@ class User(
                 nickname = nickname,
             )
         }
-    }
-
-    fun getPassword(): String {
-        return this.password
     }
 }
 
@@ -83,5 +89,29 @@ class Subscription(
         fun of(targetId: Long, subscriberId: Long): Subscription {
             return Subscription(targetId = targetId, subscriberId = subscriberId)
         }
+    }
+}
+
+@Entity
+class Notification(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
+    val senderId: Long,
+    val receiverId: Long,
+    val message: String,
+    isRead: IsRead = IsRead.FALSE,
+    val createdDt: Instant = Instant.now()
+) {
+
+    @Enumerated(EnumType.STRING)
+    var isRead = isRead
+        private set
+    fun getIsRead(): String {
+        return isRead.name
+    }
+
+    fun UpdateStatus() {
+        this.isRead = IsRead.TRUE
     }
 }
