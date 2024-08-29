@@ -12,7 +12,7 @@ class UserDetails(
     }
 
     override fun getPassword(): String {
-        return user.getPassword()
+        return user.password
     }
 
     override fun getUsername(): String {
