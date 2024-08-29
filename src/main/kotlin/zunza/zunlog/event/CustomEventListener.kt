@@ -13,6 +13,6 @@ class CustomEventListener(
 
     @EventListener
     fun notifyNewPost(postEvent: PostEvent) {
-        notificationService.notify(postEvent.userId)
+        notificationService.notify(postEvent)
     }
 }
