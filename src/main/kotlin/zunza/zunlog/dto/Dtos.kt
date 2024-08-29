@@ -1,5 +1,6 @@
 package zunza.zunlog.dto
 
+import zunza.zunlog.model.Notification
 import zunza.zunlog.model.Post
 import zunza.zunlog.model.User
 import zunza.zunlog.request.CreatePostRequest
@@ -75,3 +76,29 @@ data class RemoveSubscriptionDTO(
         }
     }
 }
+
+data class NotificationDTO(
+    val id: Long,
+    val message: String,
+    val isRead: String,
+) {
+    companion object {
+        fun from(notification: Notification): NotificationDTO {
+            return NotificationDTO(
+                id = notification.id,
+                message = notification.message,
+                isRead = notification.isRead.name)
+        }
+    }
+}
+
+data class UnreadNotificationCountDTO(
+    val count: Int,
+) {
+    companion object {
+        fun from(count: Int): UnreadNotificationCountDTO {
+            return UnreadNotificationCountDTO(count)
+        }
+    }
+}
+
