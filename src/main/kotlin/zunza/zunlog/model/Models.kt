@@ -4,13 +4,12 @@ import jakarta.persistence.*
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import zunza.zunlog.Enum.IsRead
-import zunza.zunlog.dto.CreateCommentDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import java.time.Instant
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class Post(
+class Post private constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
@@ -53,7 +52,7 @@ class Post(
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class User(
+class User private constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
@@ -80,7 +79,7 @@ class User(
 }
 
 @Entity
-class Subscription(
+class Subscription private constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
