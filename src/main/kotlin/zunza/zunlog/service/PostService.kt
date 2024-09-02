@@ -8,6 +8,7 @@ import zunza.zunlog.dto.CreatePostDTO
 import zunza.zunlog.dto.PostDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import zunza.zunlog.event.PostEvent
+import zunza.zunlog.exception.AuthorMismatchException
 import zunza.zunlog.exception.PostNotFoundException
 import zunza.zunlog.exception.UserNotFoundException
 import zunza.zunlog.model.Post
@@ -41,17 +42,27 @@ class PostService(
     }
 
     @Transactional
-    fun updatePost(id: Long, updatePostDTO: UpdatePostDTO) {
+    fun updatePost(userId: Long, id: Long, updatePostDTO: UpdatePostDTO) {
         val post = postRepository.findById(id).orElseThrow {
             throw PostNotFoundException()
         }
+
+        isWriter(userId, post.user.id)
         post.update(updatePostDTO)
     }
 
-    fun deletePost(id: Long) {
+    fun deletePost(userId: Long, id: Long) {
         val post = postRepository.findById(id).orElseThrow {
             throw PostNotFoundException()
         }
+
+        isWriter(userId, post.user.id)
         postRepository.deleteById(post.id)
+    }
+
+    private fun isWriter(userId: Long, authorId: Long) {
+        if (userId != authorId) {
+            throw AuthorMismatchException()
+        }
     }
 }

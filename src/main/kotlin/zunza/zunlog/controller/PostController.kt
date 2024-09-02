@@ -56,13 +56,18 @@ class PostController(
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun updatePost(@PathVariable id: Long, @RequestBody updatePostDTO: UpdatePostDTO) {
-        postService.updatePost(id, updatePostDTO)
+    fun updatePost(
+        @AuthenticationPrincipal userId: Long,
+        @PathVariable id: Long,
+        @RequestBody updatePostDTO: UpdatePostDTO) {
+        postService.updatePost(userId, id, updatePostDTO)
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deletePost(@PathVariable id: Long) {
-        postService.deletePost(id)
+    fun deletePost(
+        @AuthenticationPrincipal userId: Long,
+        @PathVariable id: Long) {
+        postService.deletePost(userId, id)
     }
 }
