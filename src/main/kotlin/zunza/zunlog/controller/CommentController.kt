@@ -1,5 +1,6 @@
 package zunza.zunlog.controller
 
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,7 +22,7 @@ class CommentController(
     fun createComment(
         @AuthenticationPrincipal userId: Long,
         @PathVariable postId: Long,
-        @RequestBody createCommentRequest: CreateCommentRequest
+        @Valid @RequestBody createCommentRequest: CreateCommentRequest
     ) {
         val createCommentDTO = CreateCommentDTO.of(userId, postId, createCommentRequest.content)
         commentService.writeComment(createCommentDTO)
