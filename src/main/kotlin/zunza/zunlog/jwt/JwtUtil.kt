@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
 import zunza.zunlog.service.UserDetailsService
 import java.time.Instant
@@ -65,7 +66,9 @@ class JwtUtil(
 
     fun getAuthentication(token: String): Authentication {
         val claims = getClaims(token)
-        val userDetails = userDetailsService.loadUserByUsername(claims.payload.subject)
-        return UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+//        val userDetails = userDetailsService.loadUserByUsername(claims.payload.subject)
+        val userId = claims.payload.get("userId", String::class.java).toLong()
+        val role = claims.payload.get("role", String::class.java)
+        return UsernamePasswordAuthenticationToken(userId, null, mutableListOf(GrantedAuthority { role }))
     }
 }
