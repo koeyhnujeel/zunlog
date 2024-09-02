@@ -24,10 +24,10 @@ class SecurityConfig {
             .authorizeHttpRequests {authorize ->
                 authorize
                     .requestMatchers(HttpMethod.POST, "/posts").authenticated()
-                    .requestMatchers(HttpMethod.POST, "/subscriptions/**").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/subscriptions/**").authenticated()
-                    .requestMatchers(HttpMethod.GET, "/notifications/**").authenticated()
-                    .requestMatchers(HttpMethod.POST, "/notifications/**").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/posts").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/posts").authenticated()
+                    .requestMatchers( "/subscriptions/**").authenticated()
+                    .requestMatchers("/notifications/**").authenticated()
                     .anyRequest().permitAll()
             }
         return http.build()
