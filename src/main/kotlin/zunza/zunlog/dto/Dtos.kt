@@ -1,20 +1,19 @@
 package zunza.zunlog.dto
 
-import zunza.zunlog.model.Notification
+import zunza.zunlog.Enum.IsRead
 import zunza.zunlog.model.Post
-import zunza.zunlog.model.User
 import zunza.zunlog.request.CreatePostRequest
 import java.time.Instant
 
 data class CreatePostDTO(
-    val user: User,
+    val userId: Long,
     val title: String,
     val content: String,
 ) {
     companion object {
-        fun of(user: User, createPostRequest: CreatePostRequest): CreatePostDTO {
+        fun of(userId: Long, createPostRequest: CreatePostRequest): CreatePostDTO {
             return CreatePostDTO(
-                user = user,
+                userId = userId,
                 title = createPostRequest.title,
                 content = createPostRequest.content
             )
@@ -80,16 +79,16 @@ data class RemoveSubscriptionDTO(
 data class NotificationDTO(
     val id: Long,
     val message: String,
-    val isRead: String,
+    val isRead: IsRead,
 ) {
-    companion object {
-        fun from(notification: Notification): NotificationDTO {
-            return NotificationDTO(
-                id = notification.id,
-                message = notification.message,
-                isRead = notification.isRead.name)
-        }
-    }
+//    companion object {
+//        fun from(notification: Notification): NotificationDTO {
+//            return NotificationDTO(
+//                id = notification.id,
+//                message = notification.message,
+//                isRead = notification.isRead.name)
+//        }
+//    }
 }
 
 data class UnreadNotificationCountDTO(
