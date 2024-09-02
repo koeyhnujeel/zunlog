@@ -21,23 +21,23 @@ class DataInit(
         val posts = mutableListOf<Post>()
 
         for (i in 1..20) {
-            val user = User(email = "user$i@email.com", password = passwordEncoder.encode("1234"), nickname = "user$i")
+            val user = User.of(email = "user$i@email.com", password = passwordEncoder.encode("1234"), nickname = "user$i")
             userRepository.save(user)
-            val post = Post(title = "title$i", content = "content$i", user = user)
+            val post = Post.of(title = "title$i", content = "content$i", user = user)
             posts.add(post)
         }
         postRepository.saveAll(posts)
 
         val users = mutableListOf<User>()
         for (i in 21..101) {
-            val user = User(email = "user$i@email.com", password = passwordEncoder.encode("1234"), nickname = "user$i")
+            val user = User.of(email = "user$i@email.com", password = passwordEncoder.encode("1234"), nickname = "user$i")
             users.add(user)
         }
         userRepository.saveAll(users)
 
         val subscriptions = mutableListOf<Subscription>()
         for (i in 2..101) {
-            val subscription = Subscription(targetId = 1L, subscriberId = i.toLong())
+            val subscription = Subscription.of(targetId = 1L, subscriberId = i.toLong())
             subscriptions.add(subscription)
         }
         subscriptionRepository.saveAll(subscriptions)
