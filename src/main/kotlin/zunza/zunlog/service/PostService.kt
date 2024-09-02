@@ -9,27 +9,26 @@ import zunza.zunlog.dto.PostDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import zunza.zunlog.event.PostEvent
 import zunza.zunlog.exception.PostNotFoundException
+import zunza.zunlog.exception.UserNotFoundException
 import zunza.zunlog.model.Post
 import zunza.zunlog.repository.PostRepository
+import zunza.zunlog.repository.UserRepository
 
 @Service
 class PostService(
     private val postRepository: PostRepository,
+    private val userRepository: UserRepository,
     private val eventPublisher: ApplicationEventPublisher
 ) {
 
     fun writePost(createPostDTO: CreatePostDTO) {
-        val startTime = System.nanoTime()
-        println("시작 시간: ${startTime}ms")
+        val user = userRepository.findById(createPostDTO.userId).orElseThrow {
+            throw UserNotFoundException()
+        }
 
-        val post = Post.from(createPostDTO)
+        val post = Post.of(user, createPostDTO.title, createPostDTO.content)
         postRepository.save(post)
-        eventPublisher.publishEvent(PostEvent(createPostDTO.user.id))
-
-        val endTime = System.nanoTime()
-        println("끝 시간: ${endTime}ms")
-        val durationInMillis = (endTime - startTime) / 1_000_000
-        println("측정 시간: ${durationInMillis}ms")
+        eventPublisher.publishEvent(PostEvent(user.id))
     }
 
     fun getAllPost(condition: String, value: String, pageable: Pageable): List<PostDTO> {
