@@ -4,7 +4,6 @@ import jakarta.persistence.*
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import zunza.zunlog.Enum.IsRead
-import zunza.zunlog.dto.CreatePostDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import java.time.Instant
 
@@ -38,11 +37,11 @@ class Post(
     }
 
     companion object {
-        fun from(createPostDTO: CreatePostDTO): Post {
+        fun of(user: User, title: String, content: String): Post {
             return Post(
-                title = createPostDTO.title,
-                content = createPostDTO.content,
-                user = createPostDTO.user
+                title = title,
+                content = content,
+                user = user
             )
         }
     }
@@ -107,11 +106,8 @@ class Notification(
     @Enumerated(EnumType.STRING)
     var isRead = isRead
         private set
-    fun getIsRead(): String {
-        return isRead.name
-    }
 
-    fun UpdateStatus() {
+    fun updateStatus() {
         this.isRead = IsRead.TRUE
     }
 }
