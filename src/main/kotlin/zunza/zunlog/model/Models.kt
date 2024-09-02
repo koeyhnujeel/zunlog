@@ -19,8 +19,11 @@ class Post(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_Id")
     val user: User,
-    val createdDt: Instant = Instant.now(),
 
+    @OneToMany(mappedBy = "post")
+    val comments: List<Comment> = listOf(),
+
+    val createdDt: Instant = Instant.now(),
     @LastModifiedDate
     var updatedDt: Instant = Instant.now(),
 ) {
@@ -110,4 +113,29 @@ class Notification(
     fun updateStatus() {
         this.isRead = IsRead.TRUE
     }
+}
+
+@Entity
+@EntityListeners(AuditingEntityListener::class)
+class Comment(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
+
+    content: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    val user: User,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "postId")
+    val post: Post,
+
+    val createdDt: Instant = Instant.now(),
+    @LastModifiedDate
+    var updatedDt: Instant = Instant.now()
+) {
+    var content = content
+        private set
 }
