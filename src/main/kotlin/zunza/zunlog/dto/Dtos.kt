@@ -101,3 +101,17 @@ data class UnreadNotificationCountDTO(
     }
 }
 
+data class CreateCommentDTO(
+    val userId: Long,
+    val postId: Long,
+    val content: String
+) {
+    companion object {
+        fun of(userId: Long, postId: Long, content: String): CreateCommentDTO {
+            return CreateCommentDTO(
+                userId = userId,
+                postId = postId,
+                content = content)
+        }
+    }
+}

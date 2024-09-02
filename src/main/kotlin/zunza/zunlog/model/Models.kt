@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import zunza.zunlog.Enum.IsRead
+import zunza.zunlog.dto.CreateCommentDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import java.time.Instant
 
@@ -117,7 +118,7 @@ class Notification(
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class Comment(
+class Comment private constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
@@ -138,4 +139,14 @@ class Comment(
 ) {
     var content = content
         private set
+
+    companion object {
+        fun of(content: String, user: User, post: Post): Comment {
+            return Comment(
+                content = content,
+                user = user,
+                post = post
+            )
+        }
+    }
 }

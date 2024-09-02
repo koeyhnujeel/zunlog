@@ -5,3 +5,7 @@ data class CreatePostRequest(
     val title: String,
     val content: String,
 )
+
+data class CreateCommentRequest(
+    val content: String
+)
