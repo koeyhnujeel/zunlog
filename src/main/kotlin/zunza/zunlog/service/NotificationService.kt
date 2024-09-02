@@ -1,6 +1,5 @@
 package zunza.zunlog.service
 
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,7 +9,6 @@ import zunza.zunlog.dto.UnreadNotificationCountDTO
 import zunza.zunlog.event.CustomEvent
 import zunza.zunlog.exception.NotificationNotFoundException
 import zunza.zunlog.model.Notification
-import zunza.zunlog.model.Subscription
 import zunza.zunlog.repository.NotificationRepository
 import zunza.zunlog.repository.SubscriptionRepository
 import zunza.zunlog.repository.SseEmitterRepository
@@ -35,36 +33,30 @@ class NotificationService(
 
     fun notify(event: CustomEvent) {
         val subscriptions = subscriptionRepository.findByTargetId(event.senderId)
-        val subscribers = findConnectedSubscribers(subscriptions)
 
-        val notifications = mutableListOf<Notification>()
-        subscribers.forEach { (subscriberId, emitter)  ->
-            val notification = Notification(senderId = event.senderId, receiverId = subscriberId, message = event.getMessage())
-            notifications.add(notification)
-            try {
-                emitter.send(
-                    SseEmitter.event()
-                        .name(event.getEventName())
-                        .data(event.getMessage())
-                )
-            } catch (e: IOException) {
-                emitter.complete()
-                sseEmitterRepository.deleteByUserId(subscriberId)
+        val notifications = subscriptions.stream()
+            .map { Notification(senderId = event.senderId, receiverId = it.subscriberId, message = event.getMessage()) }
+            .toList()
+        notificationRepository.saveAll(notifications)
+
+        subscriptions.forEach { subscription ->
+            sseEmitterRepository.findBySubscriberId(subscription.subscriberId)?.let {
+                try {
+                    it.send(
+                        SseEmitter.event()
+                            .name(event.getEventName())
+                            .data(event.getMessage())
+                    )
+                } catch (e: IOException) {
+                    it.complete()
+                    sseEmitterRepository.deleteByUserId(subscription.subscriberId)
+                }
             }
         }
-        notificationRepository.saveAll(notifications)
     }
 
-    private fun findConnectedSubscribers(subscriptions: List<Subscription>): Map<Long, SseEmitter> {
-        return subscriptions.mapNotNull {subscription ->
-            val emitter = sseEmitterRepository.findBySubscriberId(subscription.subscriberId)
-            emitter?.let { subscription.subscriberId to emitter }
-        }.toMap()
-    }
-
-    fun getAllNotifications(userId: Long, pageable: Pageable): Page<NotificationDTO> {
-        return notificationRepository.findAll(pageable)
-            .map { NotificationDTO.from(it) }
+    fun getAllNotifications(userId: Long, pageable: Pageable): List<NotificationDTO> {
+        return notificationRepository.findByReceiverId(userId, pageable)
     }
 
     fun getUnreadNotificationCount(userId: Long): UnreadNotificationCountDTO {
@@ -77,6 +69,10 @@ class NotificationService(
         val notification = notificationRepository.findById(notificationId).orElseThrow {
             throw NotificationNotFoundException()
         }
-        notification.UpdateStatus()
+        notification.updateStatus()
+    }
+
+    fun delete(notificationId: Long) {
+        notificationRepository.deleteById(notificationId)
     }
 }
