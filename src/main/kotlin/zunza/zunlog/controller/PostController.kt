@@ -17,7 +17,6 @@ import zunza.zunlog.dto.CreatePostDTO
 import zunza.zunlog.dto.PostDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import zunza.zunlog.request.CreatePostRequest
-import zunza.zunlog.config.UserDetails
 import zunza.zunlog.service.PostService
 
 @RestController
@@ -29,10 +28,10 @@ class PostController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createPost(
-        @AuthenticationPrincipal userDetails: UserDetails,
+        @AuthenticationPrincipal userId: Long,
         @RequestBody createPostRequest: CreatePostRequest
     ) {
-        val createPostDTO = CreatePostDTO.of(userDetails.getUser(), createPostRequest)
+        val createPostDTO = CreatePostDTO.of(userId, createPostRequest)
         postService.writePost(createPostDTO)
     }
 
