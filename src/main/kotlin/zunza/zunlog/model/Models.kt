@@ -148,4 +148,8 @@ class Comment private constructor(
             )
         }
     }
+
+    fun updateComment(content: String) {
+        this.content = content
+    }
 }

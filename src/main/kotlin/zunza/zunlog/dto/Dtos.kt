@@ -115,3 +115,19 @@ data class CreateCommentDTO(
         }
     }
 }
+
+data class UpdateCommentDTO(
+    val userId: Long,
+    val commentId: Long,
+    val content: String
+) {
+    companion object {
+        fun of(userId: Long, commentId: Long, content: String): UpdateCommentDTO {
+            return UpdateCommentDTO(
+                userId = userId,
+                commentId = commentId,
+                content = content
+            )
+        }
+    }
+}

@@ -5,11 +5,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import zunza.zunlog.dto.CreateCommentDTO
+import zunza.zunlog.dto.UpdateCommentDTO
 import zunza.zunlog.request.CreateCommentRequest
+import zunza.zunlog.request.UpdateCommentRequest
 import zunza.zunlog.service.CommentService
 
 @RestController
@@ -26,5 +29,16 @@ class CommentController(
     ) {
         val createCommentDTO = CreateCommentDTO.of(userId, postId, createCommentRequest.content)
         commentService.writeComment(createCommentDTO)
+    }
+
+    @PutMapping("/comments/{commentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun updateComment(
+        @AuthenticationPrincipal userId: Long,
+        @PathVariable commentId: Long,
+        @Valid @RequestBody updateCommentRequest: UpdateCommentRequest
+    ) {
+        val updateCommentDTO = UpdateCommentDTO.of(userId, commentId, updateCommentRequest.content)
+        commentService.updateComment(updateCommentDTO)
     }
 }
