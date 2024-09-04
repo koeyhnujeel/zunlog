@@ -3,6 +3,7 @@ package zunza.zunlog.controller
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import zunza.zunlog.dto.CreateCommentDTO
+import zunza.zunlog.dto.DeleteCommentDTO
 import zunza.zunlog.dto.UpdateCommentDTO
 import zunza.zunlog.request.CreateCommentRequest
 import zunza.zunlog.request.UpdateCommentRequest
@@ -40,5 +42,15 @@ class CommentController(
     ) {
         val updateCommentDTO = UpdateCommentDTO.of(userId, commentId, updateCommentRequest.content)
         commentService.updateComment(updateCommentDTO)
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteComment(
+        @AuthenticationPrincipal userId: Long,
+        @PathVariable commentId: Long
+    ) {
+        val deleteCommentDTO = DeleteCommentDTO(userId, commentId)
+        commentService.deleteComment(deleteCommentDTO)
     }
 }

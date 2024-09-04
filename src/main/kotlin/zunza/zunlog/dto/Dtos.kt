@@ -131,3 +131,8 @@ data class UpdateCommentDTO(
         }
     }
 }
+
+data class DeleteCommentDTO(
+    val userId: Long,
+    val commentId: Long
+)

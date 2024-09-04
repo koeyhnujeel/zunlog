@@ -3,6 +3,7 @@ package zunza.zunlog.service
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import zunza.zunlog.dto.CreateCommentDTO
+import zunza.zunlog.dto.DeleteCommentDTO
 import zunza.zunlog.dto.UpdateCommentDTO
 import zunza.zunlog.exception.CommentNotFoundException
 import zunza.zunlog.exception.CommenterMismatchException
@@ -50,5 +51,14 @@ class CommentService(
         if (userId != commenterId) {
             throw CommenterMismatchException()
         }
+    }
+
+    fun deleteComment(deleteCommentDTO: DeleteCommentDTO) {
+        val comment = commentRepository.findById(deleteCommentDTO.commentId).orElseThrow {
+            throw CommentNotFoundException()
+        }
+
+        isCommenter(deleteCommentDTO.userId, comment.user.id)
+        commentRepository.delete(comment)
     }
 }

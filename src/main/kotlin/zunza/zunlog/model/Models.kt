@@ -17,7 +17,7 @@ class Post private constructor(
     content: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_Id")
+    @JoinColumn(name = "user_id")
     val user: User,
 
     @OneToMany(mappedBy = "post")
@@ -29,10 +29,10 @@ class Post private constructor(
 ) {
 
     var title = title
-        private set
+        protected set
 
     var content = content
-        private set
+        protected set
 
     fun update(updatePostDTO: UpdatePostDTO) {
         this.title = updatePostDTO.title
@@ -66,7 +66,7 @@ class User private constructor(
 ) {
 
     var password = password
-        private set
+        protected set
     companion object {
         fun of(email: String, password: String, nickname: String): User {
             return User(
@@ -108,7 +108,7 @@ class Notification(
 
     @Enumerated(EnumType.STRING)
     var isRead = isRead
-        private set
+        protected set
 
     fun updateStatus() {
         this.isRead = IsRead.TRUE
@@ -125,11 +125,11 @@ class Comment private constructor(
     content: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     val user: User,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "post_id")
     val post: Post,
 
     val createdDt: Instant = Instant.now(),
@@ -137,7 +137,7 @@ class Comment private constructor(
     var updatedDt: Instant = Instant.now()
 ) {
     var content = content
-        private set
+        protected set
 
     companion object {
         fun of(content: String, user: User, post: Post): Comment {
