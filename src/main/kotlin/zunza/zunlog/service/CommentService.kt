@@ -35,15 +35,11 @@ class CommentService(
 
     @Transactional
     fun updateComment(updateCommentDTO: UpdateCommentDTO) {
-        val user = userRepository.findById(updateCommentDTO.userId).orElseThrow {
-            throw UserNotFoundException()
-        }
-
         val comment = commentRepository.findById(updateCommentDTO.commentId).orElseThrow {
             throw CommentNotFoundException()
         }
 
-        isCommenter(user.id, comment.user.id)
+        isCommenter(updateCommentDTO.userId, comment.user.id)
         comment.updateComment(updateCommentDTO.content)
     }
 
