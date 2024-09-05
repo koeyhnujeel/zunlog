@@ -135,4 +135,13 @@ data class UpdateCommentDTO(
 data class DeleteCommentDTO(
     val userId: Long,
     val commentId: Long
-)
+) {
+    companion object {
+        fun of(userId: Long, commentId: Long): DeleteCommentDTO {
+            return DeleteCommentDTO(
+                userId = userId,
+                commentId = commentId
+            )
+        }
+    }
+}

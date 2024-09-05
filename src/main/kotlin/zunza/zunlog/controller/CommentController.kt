@@ -50,7 +50,7 @@ class CommentController(
         @AuthenticationPrincipal userId: Long,
         @PathVariable commentId: Long
     ) {
-        val deleteCommentDTO = DeleteCommentDTO(userId, commentId)
+        val deleteCommentDTO = DeleteCommentDTO.of(userId, commentId)
         commentService.deleteComment(deleteCommentDTO)
     }
 }
