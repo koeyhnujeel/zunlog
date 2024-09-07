@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import zunza.zunlog.dto.CreatePostDTO
 import zunza.zunlog.dto.PostDTO
+import zunza.zunlog.dto.PostDetailDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import zunza.zunlog.event.PostEvent
 import zunza.zunlog.exception.AuthorMismatchException
@@ -36,9 +37,8 @@ class PostService(
         return postRepository.findPostByCondition(condition, value, pageable)
     }
 
-    fun getPost(id: Long): PostDTO {
-        val post = postRepository.findByIdFetchUser(id) ?: throw PostNotFoundException()
-        return PostDTO.from(post)
+    fun getPost(id: Long): PostDetailDTO {
+        return postRepository.findByIdWithUserAndCommentV2(id) ?: throw PostNotFoundException()
     }
 
     @Transactional

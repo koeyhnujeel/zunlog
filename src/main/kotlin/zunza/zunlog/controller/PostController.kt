@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import zunza.zunlog.dto.CreatePostDTO
 import zunza.zunlog.dto.PostDTO
+import zunza.zunlog.dto.PostDetailDTO
 import zunza.zunlog.dto.UpdatePostDTO
 import zunza.zunlog.request.CreatePostRequest
 import zunza.zunlog.service.PostService
@@ -50,7 +51,7 @@ class PostController(
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getPost(@PathVariable id: Long): PostDTO {
+    fun getPost(@PathVariable id: Long): PostDetailDTO {
         return postService.getPost(id)
     }
 
