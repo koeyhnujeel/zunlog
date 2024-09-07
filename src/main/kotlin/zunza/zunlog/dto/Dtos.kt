@@ -27,7 +27,7 @@ data class PostDTO(
     val content: String,
     val writer: String,
     val createdDt: Instant,
-    val updatedDt: Instant
+    val updatedDt: Instant,
 ) {
     companion object {
         fun from(post: Post): PostDTO {
@@ -37,7 +37,7 @@ data class PostDTO(
                 content = post.content,
                 writer = post.user.nickname,
                 createdDt = post.createdDt,
-                updatedDt = post.updatedDt
+                updatedDt = post.updatedDt,
             )
         }
     }
@@ -80,16 +80,7 @@ data class NotificationDTO(
     val id: Long,
     val message: String,
     val isRead: IsRead,
-) {
-//    companion object {
-//        fun from(notification: Notification): NotificationDTO {
-//            return NotificationDTO(
-//                id = notification.id,
-//                message = notification.message,
-//                isRead = notification.isRead.name)
-//        }
-//    }
-}
+)
 
 data class UnreadNotificationCountDTO(
     val count: Int,
@@ -141,6 +132,37 @@ data class DeleteCommentDTO(
             return DeleteCommentDTO(
                 userId = userId,
                 commentId = commentId
+            )
+        }
+    }
+}
+
+data class CommentDTO(
+    val commentId: Long,
+    val content: String,
+    val writer: String,
+    val createdDt: Instant,
+)
+
+data class PostDetailDTO(
+    val id: Long,
+    val title: String,
+    val content: String,
+    val writer: String,
+    val createdDt: Instant,
+    val updatedDt: Instant,
+    val comments: List<CommentDTO>
+) {
+    companion object {
+        fun of(postDTO: PostDTO, commentsDTO: List<CommentDTO>): PostDetailDTO {
+            return PostDetailDTO(
+                id = postDTO.id,
+                title = postDTO.title,
+                content = postDTO.content,
+                writer = postDTO.writer,
+                createdDt = postDTO.createdDt,
+                updatedDt = postDTO.updatedDt,
+                comments = commentsDTO
             )
         }
     }
