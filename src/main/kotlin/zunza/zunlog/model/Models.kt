@@ -21,7 +21,7 @@ class Post private constructor(
     val user: User,
 
     @OneToMany(mappedBy = "post")
-    val comments: List<Comment> = listOf(),
+    val comments: List<Comment> = emptyList(),
 
     val createdDt: Instant = Instant.now(),
     @LastModifiedDate
