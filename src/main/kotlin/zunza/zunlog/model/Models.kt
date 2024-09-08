@@ -15,6 +15,7 @@ class Post private constructor(
     val id: Long = 0,
     title: String,
     content: String,
+    summary: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -37,17 +38,21 @@ class Post private constructor(
     var content = content
         protected set
 
+    var summary = summary
+        protected set
+
     fun update(updatePostDTO: UpdatePostDTO) {
         this.title = updatePostDTO.title
         this.content = updatePostDTO.content
     }
 
     companion object {
-        fun of(user: User, title: String, content: String): Post {
+        fun of(user: User, title: String, content: String, summary: String): Post {
             return Post(
                 title = title,
                 content = content,
-                user = user
+                user = user,
+                summary = summary
             )
         }
     }

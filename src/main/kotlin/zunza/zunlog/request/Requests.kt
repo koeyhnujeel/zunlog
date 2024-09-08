@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length
 data class CreatePostRequest(
     val title: String,
     val content: String,
+    val summary: String,
 )
 
 data class CreateCommentRequest(

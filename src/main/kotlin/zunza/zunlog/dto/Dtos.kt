@@ -9,13 +9,15 @@ data class CreatePostDTO(
     val userId: Long,
     val title: String,
     val content: String,
+    val summary: String
 ) {
     companion object {
         fun of(userId: Long, createPostRequest: CreatePostRequest): CreatePostDTO {
             return CreatePostDTO(
                 userId = userId,
                 title = createPostRequest.title,
-                content = createPostRequest.content
+                content = createPostRequest.content,
+                summary = createPostRequest.summary
             )
         }
     }
@@ -24,22 +26,22 @@ data class CreatePostDTO(
 data class PostDTO(
     val id: Long,
     val title: String,
-    val content: String,
+    val summary: String,
     val writer: String,
     val likeCount: Int,
+    val commentCount: Int,
     val createdDt: Instant,
-    val updatedDt: Instant,
 ) {
     companion object {
         fun from(post: Post): PostDTO {
             return PostDTO(
                 id = post.id,
                 title = post.title,
-                content = post.content,
+                summary = post.content,
                 writer = post.user.nickname,
                 likeCount = post.likes.size,
+                commentCount = post.comments.size,
                 createdDt = post.createdDt,
-                updatedDt = post.updatedDt,
             )
         }
     }
@@ -156,20 +158,20 @@ data class PostDetailDTO(
     val comments: List<CommentDTO>,
     val likeCount: Int
 ) {
-    companion object {
-        fun of(postDTO: PostDTO, commentsDTO: List<CommentDTO>): PostDetailDTO {
-            return PostDetailDTO(
-                id = postDTO.id,
-                title = postDTO.title,
-                content = postDTO.content,
-                writer = postDTO.writer,
-                createdDt = postDTO.createdDt,
-                updatedDt = postDTO.updatedDt,
-                comments = commentsDTO,
-                likeCount = postDTO.likeCount
-            )
-        }
-    }
+//    companion object {
+//        fun of(postDTO: PostDTO, commentsDTO: List<CommentDTO>): PostDetailDTO {
+//            return PostDetailDTO(
+//                id = postDTO.id,
+//                title = postDTO.title,
+//                content = postDTO.summary,
+//                writer = postDTO.writer,
+//                createdDt = postDTO.createdDt,
+//                updatedDt = postDTO.updatedDt,
+//                comments = commentsDTO,
+//                likeCount = postDTO.likeCount
+//            )
+//        }
+//    }
 }
 
 data class LikeDTO(

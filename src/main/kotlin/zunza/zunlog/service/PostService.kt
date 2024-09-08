@@ -28,7 +28,7 @@ class PostService(
             throw UserNotFoundException()
         }
 
-        val post = Post.of(user, createPostDTO.title, createPostDTO.content)
+        val post = Post.of(user, createPostDTO.title, createPostDTO.content, createPostDTO.summary)
         postRepository.save(post)
         eventPublisher.publishEvent(PostEvent(user.id))
     }

@@ -23,7 +23,7 @@ class DataInit(
         for (i in 1..20) {
             val user = User.of(email = "user$i@email.com", password = passwordEncoder.encode("1234"), nickname = "user$i")
             userRepository.save(user)
-            val post = Post.of(title = "title$i", content = "content$i", user = user)
+            val post = Post.of(title = "title$i", content = "content$i", user = user, summary = "요약$i")
             posts.add(post)
         }
         postRepository.saveAll(posts)

@@ -23,7 +23,7 @@ interface PostRepository: JpaRepository<Post, Long>, PostRepositoryCustom {
 interface  PostRepositoryCustom {
     fun findPostByCondition(condition: String, value: String, pageable: Pageable): List<PostDTO>
 
-    fun findByIdWithUserAndCommentV1(postId: Long): PostDetailDTO?
+//    fun findByIdWithUserAndCommentV1(postId: Long): PostDetailDTO?
 
     fun findByIdWithUserAndCommentV2(postId: Long): PostDetailDTO?
 }
@@ -50,10 +50,11 @@ class PostRepositoryCustomImpl(
                     PostDTO::class.java,
                     post.id,
                     post.title,
-                    post.content,
+                    post.summary,
                     post.user.nickname,
+                    post.likes.size(),
+                    post.comments.size(),
                     post.createdDt,
-                    post.updatedDt
                 )
             )
             .where(builder)
@@ -63,39 +64,39 @@ class PostRepositoryCustomImpl(
             .fetch()
     }
 
-    override fun findByIdWithUserAndCommentV1(postId: Long): PostDetailDTO? {
-        val postDTO = from(post)
-            .select(
-                Projections.constructor(
-                    PostDTO::class.java,
-                    post.id,
-                    post.title,
-                    post.content,
-                    post.user.nickname,
-                    post.createdDt,
-                    post.updatedDt
-                )
-            )
-            .leftJoin(post.user, user)
-            .where(post.id.eq(postId))
-            .fetchOne() ?: return null
-
-        val commentsDTO = from(comment)
-            .select(
-                Projections.constructor(
-                    CommentDTO::class.java,
-                    comment.id,
-                    comment.content,
-                    comment.user.nickname,
-                    comment.createdDt
-                )
-            )
-            .leftJoin(comment.user, user)
-            .where(comment.post.id.eq(postId))
-            .fetch()
-
-        return PostDetailDTO.of(postDTO, commentsDTO)
-    }
+//    override fun findByIdWithUserAndCommentV1(postId: Long): PostDetailDTO? {
+//        val postDTO = from(post)
+//            .select(
+//                Projections.constructor(
+//                    PostDTO::class.java,
+//                    post.id,
+//                    post.title,
+//                    post.content,
+//                    post.user.nickname,
+//                    post.createdDt,
+//                    post.updatedDt
+//                )
+//            )
+//            .leftJoin(post.user, user)
+//            .where(post.id.eq(postId))
+//            .fetchOne() ?: return null
+//
+//        val commentsDTO = from(comment)
+//            .select(
+//                Projections.constructor(
+//                    CommentDTO::class.java,
+//                    comment.id,
+//                    comment.content,
+//                    comment.user.nickname,
+//                    comment.createdDt
+//                )
+//            )
+//            .leftJoin(comment.user, user)
+//            .where(comment.post.id.eq(postId))
+//            .fetch()
+//
+//        return PostDetailDTO.of(postDTO, commentsDTO)
+//    }
 
     override fun findByIdWithUserAndCommentV2(postId: Long): PostDetailDTO? {
         return jpaQueryFactory.selectFrom(post)
