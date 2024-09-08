@@ -26,6 +26,7 @@ data class PostDTO(
     val title: String,
     val content: String,
     val writer: String,
+    val viewCount: Long,
     val createdDt: Instant,
     val updatedDt: Instant,
 ) {
@@ -36,6 +37,7 @@ data class PostDTO(
                 title = post.title,
                 content = post.content,
                 writer = post.user.nickname,
+                viewCount = post.viewCount,
                 createdDt = post.createdDt,
                 updatedDt = post.updatedDt,
             )
@@ -149,6 +151,7 @@ data class PostDetailDTO(
     val title: String,
     val content: String,
     val writer: String,
+    val viewCount: Long,
     val createdDt: Instant,
     val updatedDt: Instant,
     val comments: List<CommentDTO>
@@ -160,6 +163,7 @@ data class PostDetailDTO(
                 title = postDTO.title,
                 content = postDTO.content,
                 writer = postDTO.writer,
+                viewCount = postDTO.viewCount,
                 createdDt = postDTO.createdDt,
                 updatedDt = postDTO.updatedDt,
                 comments = commentsDTO

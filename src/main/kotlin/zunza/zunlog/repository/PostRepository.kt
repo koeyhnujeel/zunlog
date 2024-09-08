@@ -109,6 +109,7 @@ class PostRepositoryCustomImpl(
                     post.title,
                     post.content,
                     post.user.nickname,
+                    post.viewCount,
                     post.createdDt,
                     post.updatedDt,
                     GroupBy.list(

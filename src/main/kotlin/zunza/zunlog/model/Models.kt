@@ -15,6 +15,7 @@ class Post private constructor(
     val id: Long = 0,
     title: String,
     content: String,
+    viewCount: Long = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -32,6 +33,9 @@ class Post private constructor(
         protected set
 
     var content = content
+        protected set
+
+    var viewCount = viewCount
         protected set
 
     fun update(updatePostDTO: UpdatePostDTO) {
