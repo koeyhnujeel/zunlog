@@ -1,10 +1,12 @@
 package zunza.zunlog.service
 
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import zunza.zunlog.dto.CreateCommentDTO
 import zunza.zunlog.dto.DeleteCommentDTO
 import zunza.zunlog.dto.UpdateCommentDTO
+import zunza.zunlog.event.CommentEvent
 import zunza.zunlog.exception.CommentNotFoundException
 import zunza.zunlog.exception.CommenterMismatchException
 import zunza.zunlog.exception.PostNotFoundException
@@ -16,21 +18,18 @@ import zunza.zunlog.repository.UserRepository
 
 @Service
 class CommentService(
+    private val eventPublisher: ApplicationEventPublisher,
     private val commentRepository: CommentRepository,
     private val userRepository: UserRepository,
     private val postRepository: PostRepository
 ) {
     fun writeComment(createCommentDTO: CreateCommentDTO) {
-        val user = userRepository.findById(createCommentDTO.userId).orElseThrow {
-            throw UserNotFoundException()
-        }
-
-        val post = postRepository.findById(createCommentDTO.postId).orElseThrow {
-            throw PostNotFoundException()
-        }
+        val user = userRepository.findById(createCommentDTO.userId).orElseThrow { throw UserNotFoundException() }
+        val post = postRepository.findById(createCommentDTO.postId).orElseThrow { throw PostNotFoundException() }
 
         val comment = Comment.of(createCommentDTO.content, user, post)
         commentRepository.save(comment)
+        eventPublisher.publishEvent(CommentEvent(user.id, post.user.id))
     }
 
     @Transactional

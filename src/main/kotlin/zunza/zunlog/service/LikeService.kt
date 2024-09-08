@@ -1,8 +1,10 @@
 package zunza.zunlog.service
 
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import zunza.zunlog.dto.LikeDTO
+import zunza.zunlog.event.LikeEvent
 import zunza.zunlog.exception.PostNotFoundException
 import zunza.zunlog.exception.UserNotFoundException
 import zunza.zunlog.model.PostLike
@@ -12,6 +14,7 @@ import zunza.zunlog.repository.UserRepository
 
 @Service
 class LikeService(
+    private val eventPublisher: ApplicationEventPublisher,
     private val likeRepository: LikeRepository,
     private val userRepository: UserRepository,
     private val postRepository: PostRepository
@@ -23,6 +26,7 @@ class LikeService(
 
         val like = PostLike.of(user, post)
         likeRepository.save(like)
+        eventPublisher.publishEvent(LikeEvent(user.id, post.user.id))
     }
 
     @Transactional
