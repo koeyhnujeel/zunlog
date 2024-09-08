@@ -1,6 +1,7 @@
 package zunza.zunlog.service
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import zunza.zunlog.dto.LikeDTO
 import zunza.zunlog.exception.PostNotFoundException
 import zunza.zunlog.exception.UserNotFoundException
@@ -22,5 +23,10 @@ class LikeService(
 
         val like = PostLike.of(user, post)
         likeRepository.save(like)
+    }
+
+    @Transactional
+    fun unLikePost(likeDTO: LikeDTO) {
+        likeRepository.deleteByUserIdAndPostId(likeDTO.userId, likeDTO.postId)
     }
 }

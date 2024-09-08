@@ -2,6 +2,7 @@ package zunza.zunlog.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -22,5 +23,15 @@ class LikeController(
     ) {
         val likeDTO = LikeDTO.of(userId, postId)
         likeService.likePost(likeDTO)
+    }
+
+    @DeleteMapping("posts/{postId}/likes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun unLike(
+        @AuthenticationPrincipal userId: Long,
+        @PathVariable postId: Long
+    ) {
+        val likeDTO = LikeDTO.of(userId, postId)
+        likeService.unLikePost(likeDTO)
     }
 }
