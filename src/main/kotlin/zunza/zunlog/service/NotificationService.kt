@@ -24,14 +24,15 @@ class NotificationService(
     fun subscribe(userId: Long): SseEmitter {
         val emitter = SseEmitter(60L * 1000 * 60)
         sseEmitterRepository.add(userId, emitter)
-        emitter.send(SseEmitter.event()
-            .name("connect")
-            .data("connected")
+        emitter.send(
+            SseEmitter.event()
+                .name("connect")
+                .data("connected")
         )
         return emitter
     }
 
-    fun notify(event: CustomEvent) {
+    fun postNotify(event: CustomEvent) {
         val subscriptions = subscriptionRepository.findByTargetId(event.senderId)
 
         val notifications = subscriptions.stream()
@@ -51,6 +52,25 @@ class NotificationService(
                     it.complete()
                     sseEmitterRepository.deleteByUserId(subscription.subscriberId)
                 }
+            }
+        }
+    }
+
+    fun commentAndLikeNotify(event: CustomEvent) {
+        val receiverId = event.getReceiverId()
+        val notification = Notification(senderId = event.senderId, receiverId = receiverId, message = event.getMessage())
+        notificationRepository.save(notification)
+
+        sseEmitterRepository.findBySubscriberId(receiverId)?.let {
+            try {
+                it.send(
+                    SseEmitter.event()
+                        .name(event.getEventName())
+                        .data(event.getMessage())
+                )
+            } catch (e: IOException) {
+                it.complete()
+                sseEmitterRepository.deleteByUserId(receiverId)
             }
         }
     }
