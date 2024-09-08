@@ -12,7 +12,11 @@ class CustomEventListener(
 
     @Async
     @EventListener
-    fun notifyNewPost(postEvent: PostEvent) {
-        notificationService.notify(postEvent)
+    fun notifyHandler(customEvent: CustomEvent) {
+        when (customEvent.getType()) {
+            "post" -> notificationService.postNotify(customEvent)
+            "comment" -> notificationService.commentAndLikeNotify(customEvent)
+            "like" -> notificationService.commentAndLikeNotify(customEvent)
+        }
     }
 }
