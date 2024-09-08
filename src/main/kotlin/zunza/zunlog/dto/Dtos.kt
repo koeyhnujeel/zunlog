@@ -171,3 +171,17 @@ data class PostDetailDTO(
         }
     }
 }
+
+data class LikeDTO(
+    val userId: Long,
+    val postId: Long
+) {
+    companion object {
+        fun of(userId: Long, postId: Long): LikeDTO {
+            return LikeDTO(
+                userId = userId,
+                postId = postId
+            )
+        }
+    }
+}

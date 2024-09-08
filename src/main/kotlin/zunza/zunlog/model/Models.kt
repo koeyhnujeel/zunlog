@@ -161,7 +161,7 @@ class Comment private constructor(
 class PostLike private constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -172,4 +172,13 @@ class PostLike private constructor(
     val post: Post,
 
     val createdDt: Instant = Instant.now()
-)
+) {
+    companion object {
+        fun of(user: User, post: Post): PostLike {
+            return PostLike(
+                user = user,
+                post = post
+            )
+        }
+    }
+}
