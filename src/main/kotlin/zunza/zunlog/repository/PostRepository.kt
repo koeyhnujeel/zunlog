@@ -17,10 +17,9 @@ import zunza.zunlog.model.QPost
 import zunza.zunlog.model.QUser
 
 @Repository
-interface PostRepository: JpaRepository<Post, Long>, PostRepositoryCustom {
-}
+interface PostRepository : JpaRepository<Post, Long>, PostRepositoryCustom
 
-interface  PostRepositoryCustom {
+interface PostRepositoryCustom {
     fun findPostByCondition(condition: String, value: String, pageable: Pageable): List<PostDTO>
 
 //    fun findByIdWithUserAndCommentV1(postId: Long): PostDetailDTO?
@@ -103,27 +102,28 @@ class PostRepositoryCustomImpl(
             .leftJoin(post.comments, comment)
             .leftJoin(comment.user, user)
             .where(post.id.eq(postId))
-            .transform(GroupBy.groupBy(post.id).list(
-                Projections.constructor(
-                    PostDetailDTO::class.java,
-                    post.id,
-                    post.title,
-                    post.content,
-                    post.user.nickname,
-                    post.createdDt,
-                    post.updatedDt,
-                    GroupBy.list(
-                        Projections.constructor(
-                            CommentDTO::class.java,
-                            comment.id,
-                            comment.content,
-                            comment.user.nickname,
-                            comment.createdDt
-                        ).skipNulls()
-                    ),
-                    post.likes.size()
+            .transform(
+                GroupBy.groupBy(post.id).list(
+                    Projections.constructor(
+                        PostDetailDTO::class.java,
+                        post.id,
+                        post.title,
+                        post.content,
+                        post.user.nickname,
+                        post.createdDt,
+                        post.updatedDt,
+                        GroupBy.list(
+                            Projections.constructor(
+                                CommentDTO::class.java,
+                                comment.id,
+                                comment.content,
+                                comment.user.nickname,
+                                comment.createdDt
+                            ).skipNulls()
+                        ),
+                        post.likes.size()
+                    )
                 )
-            )
-        ).firstOrNull()
+            ).firstOrNull()
     }
 }

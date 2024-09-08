@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class ZunlogApplication
 
 fun main(args: Array<String>) {
-	runApplication<ZunlogApplication>(*args)
+    runApplication<ZunlogApplication>(*args)
 }

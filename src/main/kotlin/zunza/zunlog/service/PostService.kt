@@ -24,11 +24,9 @@ class PostService(
 ) {
 
     fun writePost(createPostDTO: CreatePostDTO) {
-        val user = userRepository.findById(createPostDTO.userId).orElseThrow {
-            throw UserNotFoundException()
-        }
-
+        val user = userRepository.findById(createPostDTO.userId).orElseThrow { throw UserNotFoundException() }
         val post = Post.of(user, createPostDTO.title, createPostDTO.content, createPostDTO.summary)
+
         postRepository.save(post)
         eventPublisher.publishEvent(PostEvent(user.id))
     }
@@ -43,18 +41,14 @@ class PostService(
 
     @Transactional
     fun updatePost(userId: Long, id: Long, updatePostDTO: UpdatePostDTO) {
-        val post = postRepository.findById(id).orElseThrow {
-            throw PostNotFoundException()
-        }
+        val post = postRepository.findById(id).orElseThrow { throw PostNotFoundException() }
 
         isWriter(userId, post.user.id)
         post.update(updatePostDTO)
     }
 
     fun deletePost(userId: Long, id: Long) {
-        val post = postRepository.findById(id).orElseThrow {
-            throw PostNotFoundException()
-        }
+        val post = postRepository.findById(id).orElseThrow { throw PostNotFoundException() }
 
         isWriter(userId, post.user.id)
         postRepository.deleteById(post.id)

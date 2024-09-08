@@ -1,6 +1,6 @@
 package zunza.zunlog.exception
 
-class AuthorMismatchException(): CustomException(MESSAGE) {
+class AuthorMismatchException() : CustomException(MESSAGE) {
 
     companion object {
         private const val MESSAGE = "작성자가 아닙니다."

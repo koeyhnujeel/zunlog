@@ -11,9 +11,10 @@ import zunza.zunlog.model.PostLike
 interface LikeRepository : JpaRepository<PostLike, Long> {
 
     @Modifying
-    @Query("DELETE FROM PostLike l " +
+    @Query(
+        "DELETE FROM PostLike l " +
             "WHERE l.user.id = :userId " +
-            "AND l.post.id = :postId")
+            "AND l.post.id = :postId"
+    )
     fun deleteByUserIdAndPostId(@Param("userId")userId: Long, @Param("postId")postId: Long)
 }
-

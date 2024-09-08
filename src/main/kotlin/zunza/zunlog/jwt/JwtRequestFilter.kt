@@ -12,7 +12,7 @@ import zunza.zunlog.service.UserDetailsService
 class JwtRequestFilter(
     private val jwtUtil: JwtUtil,
     private val userDetailsService: UserDetailsService
-): OncePerRequestFilter() {
+) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -28,9 +28,9 @@ class JwtRequestFilter(
             username = jwtUtil.getUsername(accessToken)
         }
 
-        if (!username.isNullOrEmpty()
-            && jwtUtil.validateToken(accessToken!!, username)
-            && SecurityContextHolder.getContext().authentication == null
+        if (!username.isNullOrEmpty() &&
+            jwtUtil.validateToken(accessToken!!, username) &&
+            SecurityContextHolder.getContext().authentication == null
         ) {
             SecurityContextHolder.getContext().authentication = jwtUtil.getAuthentication(accessToken)
         }

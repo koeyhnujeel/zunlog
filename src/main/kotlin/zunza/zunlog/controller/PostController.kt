@@ -60,7 +60,8 @@ class PostController(
     fun updatePost(
         @AuthenticationPrincipal userId: Long,
         @PathVariable id: Long,
-        @RequestBody updatePostDTO: UpdatePostDTO) {
+        @RequestBody updatePostDTO: UpdatePostDTO
+    ) {
         postService.updatePost(userId, id, updatePostDTO)
     }
 
@@ -68,7 +69,8 @@ class PostController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deletePost(
         @AuthenticationPrincipal userId: Long,
-        @PathVariable id: Long) {
+        @PathVariable id: Long
+    ) {
         postService.deletePost(userId, id)
     }
 }

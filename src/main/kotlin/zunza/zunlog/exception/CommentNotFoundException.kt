@@ -1,6 +1,6 @@
 package zunza.zunlog.exception
 
-class CommentNotFoundException(): CustomException(MESSAGE) {
+class CommentNotFoundException() : CustomException(MESSAGE) {
 
     companion object {
         private const val MESSAGE = "존재하지 않는 댓글입니다."

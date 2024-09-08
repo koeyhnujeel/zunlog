@@ -12,12 +12,14 @@ import zunza.zunlog.model.Notification
 import zunza.zunlog.model.QNotification
 
 @Repository
-interface NotificationRepository: JpaRepository<Notification, Long>, NotificationRepositoryCustom {
+interface NotificationRepository : JpaRepository<Notification, Long>, NotificationRepositoryCustom {
 
-    @Query("SELECT COUNT(n) " +
+    @Query(
+        "SELECT COUNT(n) " +
             "FROM Notification n " +
             "WHERE n.receiverId = :id " +
-            "AND n.isRead = 'FALSE'")
+            "AND n.isRead = 'FALSE'"
+    )
     fun countUnreadNotifications(@Param("id") id: Long): Int
 }
 

@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository
 import zunza.zunlog.model.User
 
 @Repository
-interface UserRepository: JpaRepository<User, Long> {
+interface UserRepository : JpaRepository<User, Long> {
     fun findByEmail(email: String): User?
 }

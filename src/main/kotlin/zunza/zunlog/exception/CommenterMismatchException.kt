@@ -1,6 +1,6 @@
 package zunza.zunlog.exception
 
-class CommenterMismatchException(): CustomException(MESSAGE) {
+class CommenterMismatchException() : CustomException(MESSAGE) {
 
     companion object {
         private const val MESSAGE = "댓글 작성자가 아닙니다."

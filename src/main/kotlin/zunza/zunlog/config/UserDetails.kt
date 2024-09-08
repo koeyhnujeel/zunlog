@@ -6,7 +6,7 @@ import zunza.zunlog.model.User
 
 class UserDetails(
     private val user: User,
-): UserDetails {
+) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return mutableListOf(GrantedAuthority { user.role })
     }

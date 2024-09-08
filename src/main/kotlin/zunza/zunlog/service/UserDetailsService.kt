@@ -8,7 +8,7 @@ import zunza.zunlog.repository.UserRepository
 import zunza.zunlog.config.UserDetails as CustomUserDetails
 
 @Service
-class UserDetailsService(private val userRepository: UserRepository):
+class UserDetailsService(private val userRepository: UserRepository) :
     UserDetailsService {
     override fun loadUserByUsername(email: String?): UserDetails {
         if (email.isNullOrEmpty()) {

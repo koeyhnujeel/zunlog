@@ -1,6 +1,6 @@
 package zunza.zunlog.exception
 
-abstract class CustomException(message: String): RuntimeException(message) {
+abstract class CustomException(message: String) : RuntimeException(message) {
 
     private var errorField = ""
 

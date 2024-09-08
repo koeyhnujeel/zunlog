@@ -17,16 +17,16 @@ class SecurityConfig {
     fun securityFilterChain(http: HttpSecurity, jwtRequestFilter: JwtRequestFilter): SecurityFilterChain {
         http
             .csrf { it.disable() }
-            .sessionManagement{
+            .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
-            .authorizeHttpRequests {authorize ->
+            .authorizeHttpRequests { authorize ->
                 authorize
                     .requestMatchers(HttpMethod.POST, "/posts").authenticated()
                     .requestMatchers(HttpMethod.PUT, "/posts").authenticated()
                     .requestMatchers(HttpMethod.DELETE, "/posts").authenticated()
-                    .requestMatchers( "/subscriptions/**").authenticated()
+                    .requestMatchers("/subscriptions/**").authenticated()
                     .requestMatchers("/notifications/**").authenticated()
                     .anyRequest().permitAll()
             }

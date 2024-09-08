@@ -106,7 +106,8 @@ data class CreateCommentDTO(
             return CreateCommentDTO(
                 userId = userId,
                 postId = postId,
-                content = content)
+                content = content
+            )
         }
     }
 }

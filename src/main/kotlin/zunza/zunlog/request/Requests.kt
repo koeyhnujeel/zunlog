@@ -2,7 +2,6 @@ package zunza.zunlog.request
 
 import org.hibernate.validator.constraints.Length
 
-
 data class CreatePostRequest(
     val title: String,
     val content: String,

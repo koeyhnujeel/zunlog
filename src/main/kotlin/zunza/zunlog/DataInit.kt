@@ -16,7 +16,7 @@ class DataInit(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val subscriptionRepository: SubscriptionRepository,
-): CommandLineRunner {
+) : CommandLineRunner {
     override fun run(vararg args: String?) {
         val posts = mutableListOf<Post>()
 
