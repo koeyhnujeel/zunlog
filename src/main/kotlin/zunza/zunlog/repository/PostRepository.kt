@@ -119,7 +119,8 @@ class PostRepositoryCustomImpl(
                             comment.user.nickname,
                             comment.createdDt
                         ).skipNulls()
-                    )
+                    ),
+                    post.likes.size()
                 )
             )
         ).firstOrNull()

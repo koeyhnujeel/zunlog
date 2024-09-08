@@ -26,6 +26,7 @@ data class PostDTO(
     val title: String,
     val content: String,
     val writer: String,
+    val likeCount: Int,
     val createdDt: Instant,
     val updatedDt: Instant,
 ) {
@@ -36,6 +37,7 @@ data class PostDTO(
                 title = post.title,
                 content = post.content,
                 writer = post.user.nickname,
+                likeCount = post.likes.size,
                 createdDt = post.createdDt,
                 updatedDt = post.updatedDt,
             )
@@ -151,7 +153,8 @@ data class PostDetailDTO(
     val writer: String,
     val createdDt: Instant,
     val updatedDt: Instant,
-    val comments: List<CommentDTO>
+    val comments: List<CommentDTO>,
+    val likeCount: Int
 ) {
     companion object {
         fun of(postDTO: PostDTO, commentsDTO: List<CommentDTO>): PostDetailDTO {
@@ -162,7 +165,8 @@ data class PostDetailDTO(
                 writer = postDTO.writer,
                 createdDt = postDTO.createdDt,
                 updatedDt = postDTO.updatedDt,
-                comments = commentsDTO
+                comments = commentsDTO,
+                likeCount = postDTO.likeCount
             )
         }
     }

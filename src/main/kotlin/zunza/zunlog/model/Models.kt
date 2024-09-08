@@ -23,6 +23,9 @@ class Post private constructor(
     @OneToMany(mappedBy = "post")
     val comments: List<Comment> = emptyList(),
 
+    @OneToMany(mappedBy = "post")
+    val likes: List<PostLike> = emptyList(),
+
     val createdDt: Instant = Instant.now(),
     @LastModifiedDate
     var updatedDt: Instant = Instant.now(),
@@ -153,3 +156,20 @@ class Comment private constructor(
         this.content = content
     }
 }
+
+@Entity
+class PostLike private constructor(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    val user: User,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    val post: Post,
+
+    val createdDt: Instant = Instant.now()
+)
