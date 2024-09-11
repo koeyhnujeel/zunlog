@@ -1,5 +1,6 @@
 package zunza.zunlog.controller
 
+import jakarta.validation.Valid
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -30,7 +31,7 @@ class PostController(
     @ResponseStatus(HttpStatus.CREATED)
     fun createPost(
         @AuthenticationPrincipal userId: Long,
-        @RequestBody createPostRequest: CreatePostRequest
+        @Valid @RequestBody createPostRequest: CreatePostRequest
     ) {
         val createPostDTO = CreatePostDTO.of(userId, createPostRequest)
         postService.writePost(createPostDTO)
