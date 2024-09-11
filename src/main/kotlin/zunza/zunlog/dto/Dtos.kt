@@ -58,6 +58,14 @@ data class CreateUserDTO(
     val nickname: String,
 )
 
+data class EmailDuplicationDTO(
+    val message: String = "사용 가능한 이메일입니다."
+)
+
+data class NicknameDuplicationDTO(
+    val message: String = "사용 가능한 닉네임입니다."
+)
+
 data class CreateSubscriptionDTO(
     val targetId: Long,
     val subscriberId: Long

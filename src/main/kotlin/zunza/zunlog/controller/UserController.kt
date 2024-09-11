@@ -1,12 +1,11 @@
 package zunza.zunlog.controller
 
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import zunza.zunlog.dto.CreateUserDTO
+import zunza.zunlog.dto.EmailDuplicationDTO
+import zunza.zunlog.dto.NicknameDuplicationDTO
 import zunza.zunlog.service.UserService
 
 @RestController
@@ -17,7 +16,19 @@ class UserController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createUser(@RequestBody createUserDTO: CreateUserDTO) {
+    fun createUser(@Valid @RequestBody createUserDTO: CreateUserDTO) {
         userService.join(createUserDTO)
+    }
+
+    @GetMapping("/check-email")
+    @ResponseStatus(HttpStatus.OK)
+    fun checkEmailDuplication(@RequestParam email: String): EmailDuplicationDTO {
+        return userService.isEmailDuplicated(email)
+    }
+
+    @GetMapping("/check-nickname")
+    @ResponseStatus(HttpStatus.OK)
+    fun checkNicknameDuplication(@RequestParam nickname: String): NicknameDuplicationDTO {
+        return userService.isNicknameDuplicated(nickname)
     }
 }
