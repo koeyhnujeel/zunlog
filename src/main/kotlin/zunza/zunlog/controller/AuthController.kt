@@ -1,41 +1,33 @@
 package zunza.zunlog.controller
 
-import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import zunza.zunlog.config.UserDetails
 import zunza.zunlog.jwt.JwtUtil
-import zunza.zunlog.service.UserDetailsService
+import zunza.zunlog.request.TokenRequest
 
-data class AuthRequest(
-    val email: String,
-    val password: String,
-)
 @RestController
+@RequestMapping("/auth")
 class AuthController(
-    private val userDetailsService: UserDetailsService,
-    private val passwordEncoder: PasswordEncoder,
     private val jwtUtil: JwtUtil
 ) {
+    @PostMapping("/refresh")
+    @ResponseStatus(HttpStatus.OK)
+    fun refreshAccessToken(@RequestBody tokenRequest: TokenRequest): Map<String, String> {
+        val username = jwtUtil.getUsername(tokenRequest.refreshToken, jwtUtil.refreshSecretKey)
+        jwtUtil.validateRefreshToken(tokenRequest.refreshToken, username)
 
-    @PostMapping("/login")
-    fun authenticate(@RequestBody authRequest: AuthRequest): HashMap<String, String> {
-        val userDetails = (userDetailsService.loadUserByUsername(authRequest.email) as UserDetails)
-
-        val claims = hashMapOf(
-            "userId" to userDetails.getUserId().toString(),
-            "email" to authRequest.email,
-            "role" to userDetails.authorities.first().authority
+        val expiredAccessTokenClaims = jwtUtil.getExpiredTokenClaims(tokenRequest.accessToken, jwtUtil.secretKey)
+        val newAccessTokenClaims = hashMapOf(
+            "userId" to expiredAccessTokenClaims.get("userId", String::class.java),
+            "email" to expiredAccessTokenClaims.get("email", String::class.java),
+            "role" to expiredAccessTokenClaims.get("role", String::class.java)
         )
 
-        val response = hashMapOf<String, String>()
-        if (passwordEncoder.matches(authRequest.password, userDetails.password)) {
-            response["token"] = jwtUtil.generateToken(authRequest.email, claims)
-            return response
-        }
-
-        response["token"] = "Authentication Failed"
-        return response
+        val accessToken = jwtUtil.generateAccessToken(username, newAccessTokenClaims)
+        return mapOf("token" to accessToken)
     }
 }

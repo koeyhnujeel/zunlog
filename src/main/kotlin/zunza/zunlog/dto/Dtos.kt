@@ -196,3 +196,20 @@ data class LikeDTO(
         }
     }
 }
+
+data class TokenDTO(
+    val accessToken: String,
+    val refreshToken: String
+) {
+    companion object {
+        fun of(accessToken: String, refreshToken: String): TokenDTO {
+            return TokenDTO(accessToken = accessToken, refreshToken = refreshToken)
+        }
+    }
+}
+
+data class ErrorDTO(
+    val message: String,
+    val errorField: String,
+    val code: Int
+)
