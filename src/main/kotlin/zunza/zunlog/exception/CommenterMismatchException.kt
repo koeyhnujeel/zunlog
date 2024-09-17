@@ -1,5 +1,7 @@
 package zunza.zunlog.exception
 
+import org.springframework.http.HttpStatus
+
 class CommenterMismatchException() : CustomException(MESSAGE) {
 
     companion object {
@@ -11,6 +13,6 @@ class CommenterMismatchException() : CustomException(MESSAGE) {
     }
 
     override fun getStatusCode(): Int {
-        return 403
+        return HttpStatus.FORBIDDEN.value()
     }
 }

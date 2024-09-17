@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -51,7 +52,7 @@ class LoginFilter(
         with(response!!) {
             contentType = MediaType.APPLICATION_JSON_VALUE
             characterEncoding = StandardCharsets.UTF_8.name()
-            status = 200
+            status = HttpStatus.OK.value()
             objectMapper.writeValue(writer, tokenDTO)
         }
     }
@@ -64,13 +65,13 @@ class LoginFilter(
         val errorDTO = ErrorDTO(
             "아이디 또는 비밀번호를 확인해 주세요.",
             "Email or Password",
-            401
+            HttpStatus.UNAUTHORIZED.value()
         )
 
         with(response!!) {
             contentType = MediaType.APPLICATION_JSON_VALUE
             characterEncoding = StandardCharsets.UTF_8.name()
-            status = 401
+            status = HttpStatus.UNAUTHORIZED.value()
             objectMapper.writeValue(writer, errorDTO)
         }
     }

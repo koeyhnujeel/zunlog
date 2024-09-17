@@ -3,6 +3,7 @@ package zunza.zunlog.config.handler
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
@@ -21,13 +22,13 @@ class Http401Handler(
         val errorDTO = ErrorDTO(
             "로그인이 필요한 서비스입니다.",
             "",
-            401
+            HttpStatus.UNAUTHORIZED.value()
         )
 
         with(response!!) {
             contentType = MediaType.APPLICATION_JSON_VALUE
             characterEncoding = StandardCharsets.UTF_8.name()
-            status = errorDTO.code
+            status = HttpStatus.UNAUTHORIZED.value()
             objectMapper.writeValue(writer, errorDTO)
         }
     }

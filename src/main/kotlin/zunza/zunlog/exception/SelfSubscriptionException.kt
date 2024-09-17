@@ -1,5 +1,7 @@
 package zunza.zunlog.exception
 
+import org.springframework.http.HttpStatus
+
 class SelfSubscriptionException() : CustomException(MESSAGE) {
 
     companion object {
@@ -11,6 +13,6 @@ class SelfSubscriptionException() : CustomException(MESSAGE) {
     }
 
     override fun getStatusCode(): Int {
-        return 400
+        return HttpStatus.BAD_REQUEST.value()
     }
 }

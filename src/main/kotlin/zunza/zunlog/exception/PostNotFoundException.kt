@@ -1,5 +1,7 @@
 package zunza.zunlog.exception
 
+import org.springframework.http.HttpStatus
+
 class PostNotFoundException() : CustomException(MESSAGE) {
 
     companion object {
@@ -11,6 +13,6 @@ class PostNotFoundException() : CustomException(MESSAGE) {
     }
 
     override fun getStatusCode(): Int {
-        return 404
+        return HttpStatus.NOT_FOUND.value()
     }
 }

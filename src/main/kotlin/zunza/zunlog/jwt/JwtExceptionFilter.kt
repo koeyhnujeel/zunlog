@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.SignatureException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -35,13 +36,13 @@ class JwtExceptionFilter(
         val errorDTO = ErrorDTO(
             message,
             "Token",
-            401
+            HttpStatus.UNAUTHORIZED.value()
         )
 
         with(response) {
             contentType = MediaType.APPLICATION_JSON_VALUE
             characterEncoding = StandardCharsets.UTF_8.name()
-            status = errorDTO.code
+            status = HttpStatus.UNAUTHORIZED.value()
             objectMapper.writeValue(writer, errorDTO)
         }
     }

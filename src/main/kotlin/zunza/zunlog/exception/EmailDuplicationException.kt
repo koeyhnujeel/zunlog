@@ -1,5 +1,7 @@
 package zunza.zunlog.exception
 
+import org.springframework.http.HttpStatus
+
 class EmailDuplicationException() : CustomException(MESSAGE) {
 
     companion object {
@@ -11,6 +13,6 @@ class EmailDuplicationException() : CustomException(MESSAGE) {
     }
 
     override fun getStatusCode(): Int {
-        return 409
+        return HttpStatus.CONFLICT.value()
     }
 }
