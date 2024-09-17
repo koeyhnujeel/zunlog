@@ -1,5 +1,6 @@
 package zunza.zunlog.jwt
 
+import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -11,7 +12,6 @@ import zunza.zunlog.service.UserDetailsService
 @Component
 class JwtRequestFilter(
     private val jwtUtil: JwtUtil,
-    private val userDetailsService: UserDetailsService
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -23,13 +23,18 @@ class JwtRequestFilter(
         var username: String? = null
         var accessToken: String? = null
         val tokenPrefix = "Bearer "
+
         if (!header.isNullOrEmpty() && header.startsWith(tokenPrefix)) {
             accessToken = header.substring(tokenPrefix.length)
-            username = jwtUtil.getUsername(accessToken)
+        }
+
+        if (!accessToken.isNullOrEmpty()) {
+            jwtUtil.isTokenExpired(accessToken, jwtUtil.secretKey)
+            username = jwtUtil.getUsername(accessToken, jwtUtil.secretKey)
         }
 
         if (!username.isNullOrEmpty() &&
-            jwtUtil.validateToken(accessToken!!, username) &&
+            jwtUtil.validateAccessToken(accessToken!!, username) &&
             SecurityContextHolder.getContext().authentication == null
         ) {
             SecurityContextHolder.getContext().authentication = jwtUtil.getAuthentication(accessToken)
