@@ -90,6 +90,7 @@ data class RemoveSubscriptionDTO(
 
 data class NotificationDTO(
     val id: Long,
+    val referenceId: Long,
     val message: String,
     val isRead: IsRead,
 )

@@ -29,7 +29,7 @@ class CommentService(
 
         val comment = Comment.of(createCommentDTO.content, user, post)
         commentRepository.save(comment)
-        eventPublisher.publishEvent(CommentEvent(user.id, post.user.id))
+        eventPublisher.publishEvent(CommentEvent(user.id, user.nickname, post.user.id, post.id))
     }
 
     @Transactional

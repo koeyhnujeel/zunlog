@@ -109,6 +109,7 @@ class Notification(
     val id: Long = 0,
     val senderId: Long,
     val receiverId: Long,
+    val referenceId: Long,
     val message: String,
     isRead: IsRead = IsRead.FALSE,
     val createdDt: Instant = Instant.now()

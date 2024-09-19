@@ -27,8 +27,8 @@ class PostService(
         val user = userRepository.findById(createPostDTO.userId).orElseThrow { throw UserNotFoundException() }
         val post = Post.of(user, createPostDTO.title, createPostDTO.content, createPostDTO.summary)
 
-        postRepository.save(post)
-        eventPublisher.publishEvent(PostEvent(user.id))
+        val savedPost = postRepository.save(post)
+        eventPublisher.publishEvent(PostEvent(user.id, user.nickname, savedPost.id))
     }
 
     fun getAllPost(condition: String, value: String, pageable: Pageable): List<PostDTO> {

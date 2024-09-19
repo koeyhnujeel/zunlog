@@ -36,7 +36,7 @@ class NotificationService(
         val subscriptions = subscriptionRepository.findByTargetId(event.senderId)
 
         val notifications = subscriptions.stream()
-            .map { Notification(senderId = event.senderId, receiverId = it.subscriberId, message = event.getMessage()) }
+            .map { Notification(senderId = event.senderId, receiverId = it.subscriberId, referenceId = event.getReferenceId(),  message = event.getMessage()) }
             .toList()
         notificationRepository.saveAll(notifications)
 
@@ -47,6 +47,7 @@ class NotificationService(
                         SseEmitter.event()
                             .name(event.getEventName())
                             .data(event.getMessage())
+                            .data(event.getReferenceId())
                     )
                 } catch (e: IOException) {
                     it.complete()
@@ -58,7 +59,7 @@ class NotificationService(
 
     fun commentAndLikeNotify(event: CustomEvent) {
         val receiverId = event.getReceiverId()
-        val notification = Notification(senderId = event.senderId, receiverId = receiverId, message = event.getMessage())
+        val notification = Notification(senderId = event.senderId, receiverId = receiverId, referenceId = event.getReferenceId(), message = event.getMessage())
         notificationRepository.save(notification)
 
         sseEmitterRepository.findBySubscriberId(receiverId)?.let {

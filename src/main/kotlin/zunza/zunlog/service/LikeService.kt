@@ -26,7 +26,7 @@ class LikeService(
 
         val like = PostLike.of(user, post)
         likeRepository.save(like)
-        eventPublisher.publishEvent(LikeEvent(user.id, post.user.id))
+        eventPublisher.publishEvent(LikeEvent(user.id, user.nickname, post.user.id, post.id))
     }
 
     @Transactional

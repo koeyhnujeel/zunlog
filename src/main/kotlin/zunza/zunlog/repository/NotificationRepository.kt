@@ -37,6 +37,7 @@ class NotificationRepositoryCustomImpl : NotificationRepositoryCustom, QuerydslR
                 Projections.constructor(
                     NotificationDTO::class.java,
                     notification.id,
+                    notification.referenceId,
                     notification.message,
                     notification.isRead,
                 )
