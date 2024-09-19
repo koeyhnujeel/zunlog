@@ -31,7 +31,7 @@ class JwtUtil(
             .claims(claims)
             .subject(username)
             .issuedAt(Date(now.toEpochMilli()))
-            .expiration(Date(now.plusSeconds(1).toEpochMilli()))
+            .expiration(Date(now.plusSeconds(600).toEpochMilli()))
             .signWith(key, Jwts.SIG.HS256).compact()
     }
 
