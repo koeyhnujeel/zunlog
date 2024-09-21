@@ -96,6 +96,7 @@ class NotificationService(
         notification.updateStatus()
     }
 
+    @Transactional
     fun delete(notificationId: Long) {
         notificationRepository.deleteById(notificationId)
     }
