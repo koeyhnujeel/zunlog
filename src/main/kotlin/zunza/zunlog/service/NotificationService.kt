@@ -9,6 +9,7 @@ import zunza.zunlog.dto.UnreadNotificationCountDTO
 import zunza.zunlog.event.CustomEvent
 import zunza.zunlog.exception.NotificationNotFoundException
 import zunza.zunlog.model.Notification
+import zunza.zunlog.repository.NotificationJdbcRepository
 import zunza.zunlog.repository.NotificationRepository
 import zunza.zunlog.repository.SubscriptionRepository
 import zunza.zunlog.repository.SseEmitterRepository
@@ -19,6 +20,7 @@ class NotificationService(
     private val sseEmitterRepository: SseEmitterRepository,
     private val subscriptionRepository: SubscriptionRepository,
     private val notificationRepository: NotificationRepository,
+    private val notificationJdbcRepository: NotificationJdbcRepository,
 ) {
 
     fun subscribe(userId: Long): SseEmitter {
@@ -38,7 +40,8 @@ class NotificationService(
         val notifications = subscriptions.stream()
             .map { Notification(senderId = event.senderId, receiverId = it.subscriberId, referenceId = event.getReferenceId(),  message = event.getMessage()) }
             .toList()
-        notificationRepository.saveAll(notifications)
+//        notificationRepository.saveAll(notifications)
+        notificationJdbcRepository.batchInsertNotifications(notifications)
 
         subscriptions.forEach { subscription ->
             sseEmitterRepository.findBySubscriberId(subscription.subscriberId)?.let {
