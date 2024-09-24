@@ -1,5 +1,6 @@
 package zunza.zunlog.dto
 
+import org.springframework.data.domain.Page
 import zunza.zunlog.Enum.IsRead
 import zunza.zunlog.model.Post
 import zunza.zunlog.request.CreatePostRequest
@@ -23,7 +24,7 @@ data class CreatePostDTO(
     }
 }
 
-data class PostDTO(
+data class PostListDTO(
     val id: Long,
     val title: String,
     val summary: String,
@@ -33,8 +34,8 @@ data class PostDTO(
     val createdDt: Instant,
 ) {
     companion object {
-        fun from(post: Post): PostDTO {
-            return PostDTO(
+        fun from(post: Post): PostListDTO {
+            return PostListDTO(
                 id = post.id,
                 title = post.title,
                 summary = post.content,
@@ -46,6 +47,16 @@ data class PostDTO(
         }
     }
 }
+
+data class PostDTO(
+    val id: Long,
+    val title: String,
+    val content: String,
+    val writer: String,
+    val likeCount: Int,
+    val createdDt: Instant,
+    val updatedDt: Instant,
+)
 
 data class UpdatePostDTO(
     val title: String,
@@ -158,7 +169,7 @@ data class CommentDTO(
     val createdDt: Instant,
 )
 
-data class PostDetailDTO(
+data class PostDetailDTOv1(
     val id: Long,
     val title: String,
     val content: String,
@@ -183,6 +194,18 @@ data class PostDetailDTO(
 //        }
 //    }
 }
+
+data class PostDetailDTOv2(
+    val id: Long,
+    val title: String,
+    val content: String,
+    val writer: String,
+    val createdDt: Instant,
+    val updatedDt: Instant,
+    val likeCount: Int,
+    val commentTotalPages: Int,
+    val comments: List<CommentDTO>
+)
 
 data class LikeDTO(
     val userId: Long,

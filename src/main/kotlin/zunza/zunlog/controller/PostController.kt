@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import zunza.zunlog.dto.CreatePostDTO
-import zunza.zunlog.dto.PostDTO
-import zunza.zunlog.dto.PostDetailDTO
-import zunza.zunlog.dto.UpdatePostDTO
+import zunza.zunlog.dto.*
 import zunza.zunlog.request.CreatePostRequest
 import zunza.zunlog.service.PostService
 
@@ -44,7 +41,7 @@ class PostController(
         @RequestParam value: String = "",
         @RequestParam page: Int = 1,
         @RequestParam size: Int = 10
-    ): List<PostDTO> {
+    ): List<PostListDTO> {
 
         val pageable = PageRequest.of(page - 1, size)
         return postService.getAllPost(condition, value, pageable)
@@ -52,7 +49,7 @@ class PostController(
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getPost(@PathVariable id: Long): PostDetailDTO {
+    fun getPost(@PathVariable id: Long): PostDetailDTOv2 {
         return postService.getPost(id)
     }
 
