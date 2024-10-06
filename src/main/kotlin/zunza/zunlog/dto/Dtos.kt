@@ -1,6 +1,6 @@
 package zunza.zunlog.dto
 
-import org.springframework.data.domain.Page
+import zunza.zunlog.Enum.IsLike
 import zunza.zunlog.Enum.IsRead
 import zunza.zunlog.model.Post
 import zunza.zunlog.request.CreatePostRequest
@@ -203,6 +203,7 @@ data class PostDetailDTOv2(
     val createdDt: Instant,
     val updatedDt: Instant,
     val likeCount: Int,
+    val isLike: IsLike,
     val commentTotalPages: Int,
     val comments: List<CommentDTO>
 )
