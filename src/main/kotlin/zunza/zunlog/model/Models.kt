@@ -9,7 +9,7 @@ import java.time.Instant
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-@Table(indexes = [Index(name = "idx_post_title", columnList = "title")])
+@Table(indexes = [Index(name = "idx_post_covering", columnList = "created_dt DESC, user_id, id, title, summary")])
 class Post private constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
