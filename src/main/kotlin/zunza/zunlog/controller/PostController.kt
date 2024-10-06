@@ -1,6 +1,7 @@
 package zunza.zunlog.controller
 
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -45,18 +46,18 @@ class PostController(
         return postService.getPostList(pageable)
     }
 
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    fun getPosts(
-//        @RequestParam condition: String = "title",
-//        @RequestParam value: String = "",
-//        @RequestParam page: Int = 1,
-//        @RequestParam size: Int = 10
-//    ): List<PostListDTO> {
-//
-//        val pageable = PageRequest.of(page - 1, size)
-//        return postService.getAllPost(condition, value, pageable)
-//    }
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    fun searchPosts(
+        @RequestParam condition: String = "title",
+        @RequestParam value: String = "",
+        @RequestParam page: Int = 1,
+        @RequestParam size: Int = 10
+    ): Page<PostListDTO> {
+
+        val pageable = PageRequest.of(page - 1, size)
+        return postService.search(condition, value, pageable)
+    }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

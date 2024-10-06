@@ -3,8 +3,9 @@ package zunza.zunlog.repository
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.group.GroupBy
 import com.querydsl.core.types.Projections
-import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.impl.JPAQueryFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -24,7 +25,7 @@ interface PostRepository : JpaRepository<Post, Long>, PostRepositoryCustom
 
 interface PostRepositoryCustom {
     fun findPostList(pageable: Pageable): List<PostListDTO>
-    fun findPostByCondition(condition: String, value: String, pageable: Pageable): List<PostListDTO>
+    fun findPostByCondition(condition: String, value: String, pageable: Pageable): Page<PostListDTO>
     fun findByIdWithUserAndCommentV1(postId: Long): PostDetailDTOv1?
     fun findByIdWithUserAndCommentV2(userId: Long, postId: Long): PostDetailDTOv2?
 }
@@ -61,16 +62,16 @@ class PostRepositoryCustomImpl(
             .fetch()
     }
 
-    override fun findPostByCondition(condition: String, value: String, pageable: Pageable): List<PostListDTO> {
+    override fun findPostByCondition(condition: String, value: String, pageable: Pageable): Page<PostListDTO> {
         val builder = BooleanBuilder()
 
         when (condition) {
-            "title" -> builder.and(post.createdDt.isNotNull).and(post.title.contains(value))
-//            "title" -> builder.and(FullTextSearch.match(post.title, value))
+            "title" -> builder.and(FullTextSearch.match(post.title, value))
+//            "title" -> builder.and(post.title.contains(value))
             "writer" -> builder.and(post.user.nickname.eq(value))
         }
 
-        return from(post)
+        val queryResult = from(post)
             .select(
                 Projections.constructor(
                     PostListDTO::class.java,
@@ -80,20 +81,20 @@ class PostRepositoryCustomImpl(
                     user.nickname,
                     post.likes.size(),
                     post.comments.size(),
-//                    like.id.countDistinct().`as`("likeCount"),
-//                    comment.id.countDistinct().`as`("commentCount"),
                     post.createdDt
                 )
             )
-            .join(post.user, user)
-//            .leftJoin(post.likes, like)
-//            .leftJoin(post.comments, comment)
+            .leftJoin(post.user, user)
             .where(builder)
-//            .groupBy(post.id, post.title, post.summary, user.nickname, post.createdDt)
-            .orderBy(post.createdDt.desc(), post.title.asc())
+            .orderBy(post.id.desc())
             .limit(pageable.pageSize.toLong())
             .offset(pageable.offset)
-            .fetch()
+            .fetchResults()
+
+        val content = queryResult.results
+        val total = queryResult.total
+
+        return PageImpl(content, pageable, total)
     }
 
     override fun findByIdWithUserAndCommentV1(postId: Long): PostDetailDTOv1? {

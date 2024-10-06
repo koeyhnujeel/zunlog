@@ -1,6 +1,7 @@
 package zunza.zunlog.service
 
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -30,6 +31,10 @@ class PostService(
 
     fun getPostList(pageable: Pageable): List<PostListDTO> {
         return postRepository.findPostList(pageable)
+    }
+
+    fun search(condition: String, value: String, pageable: Pageable): Page<PostListDTO> {
+        return postRepository.findPostByCondition(condition, value, pageable)
     }
 
     fun getPost(userId: Long, id: Long): PostDetailDTOv2 {
