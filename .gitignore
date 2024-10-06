@@ -56,13 +56,10 @@ cmake-build-*/
 # IntelliJ
 out/
 application-sensitive.yml
-test.json
-package.json
-package-lock.json
+test.js
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
-node_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
