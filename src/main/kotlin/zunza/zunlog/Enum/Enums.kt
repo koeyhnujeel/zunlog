@@ -4,3 +4,8 @@ enum class IsRead {
     TRUE,
     FALSE,
 }
+
+enum class IsLike {
+    TRUE,
+    FALSE,
+}
