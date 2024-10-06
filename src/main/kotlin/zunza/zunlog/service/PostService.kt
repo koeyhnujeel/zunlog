@@ -10,7 +10,6 @@ import zunza.zunlog.exception.AuthorMismatchException
 import zunza.zunlog.exception.PostNotFoundException
 import zunza.zunlog.exception.UserNotFoundException
 import zunza.zunlog.model.Post
-import zunza.zunlog.repository.CommentRepository
 import zunza.zunlog.repository.PostRepository
 import zunza.zunlog.repository.UserRepository
 
@@ -18,7 +17,6 @@ import zunza.zunlog.repository.UserRepository
 class PostService(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
-    private val commentRepository: CommentRepository,
     private val eventPublisher: ApplicationEventPublisher
 ) {
 
@@ -30,12 +28,12 @@ class PostService(
         eventPublisher.publishEvent(PostEvent(user.id, user.nickname, savedPost.id))
     }
 
-    fun getAllPost(condition: String, value: String, pageable: Pageable): List<PostListDTO> {
-        return postRepository.findPostByCondition(condition, value, pageable)
+    fun getPostList(pageable: Pageable): List<PostListDTO> {
+        return postRepository.findPostList(pageable)
     }
 
-    fun getPost(id: Long): PostDetailDTOv2 {
-        return postRepository.findByIdWithUserAndCommentV2(id) ?: throw PostNotFoundException()
+    fun getPost(userId: Long, id: Long): PostDetailDTOv2 {
+        return postRepository.findByIdWithUserAndCommentV2(userId, id) ?: throw PostNotFoundException()
     }
 
     @Transactional
