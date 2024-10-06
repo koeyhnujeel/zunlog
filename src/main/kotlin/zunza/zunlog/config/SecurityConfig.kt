@@ -40,9 +40,9 @@ class SecurityConfig(
             .addFilterBefore(JwtExceptionFilter(objectMapper), jwtRequestFilter::class.java)
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers(HttpMethod.POST, "/posts").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/posts/**").authenticated()
                     .requestMatchers(HttpMethod.PUT, "/posts").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/posts").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/posts/**").authenticated()
                     .requestMatchers("/subscriptions/**").authenticated()
                     .requestMatchers("/notifications/**").authenticated()
                     .anyRequest().permitAll()
