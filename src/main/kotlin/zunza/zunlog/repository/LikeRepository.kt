@@ -17,4 +17,5 @@ interface LikeRepository : JpaRepository<PostLike, Long> {
             "AND l.post.id = :postId"
     )
     fun deleteByUserIdAndPostId(@Param("userId")userId: Long, @Param("postId")postId: Long)
+    fun existsByUserIdAndPostId(userId: Long, postId: Long): Boolean
 }
