@@ -37,20 +37,34 @@ class PostController(
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     fun getPosts(
-        @RequestParam condition: String = "title",
-        @RequestParam value: String = "",
         @RequestParam page: Int = 1,
-        @RequestParam size: Int = 10
+        @RequestParam size: Int = 25
     ): List<PostListDTO> {
 
         val pageable = PageRequest.of(page - 1, size)
-        return postService.getAllPost(condition, value, pageable)
+        return postService.getPostList(pageable)
     }
+
+//    @GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    fun getPosts(
+//        @RequestParam condition: String = "title",
+//        @RequestParam value: String = "",
+//        @RequestParam page: Int = 1,
+//        @RequestParam size: Int = 10
+//    ): List<PostListDTO> {
+//
+//        val pageable = PageRequest.of(page - 1, size)
+//        return postService.getAllPost(condition, value, pageable)
+//    }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getPost(@PathVariable id: Long): PostDetailDTOv2 {
-        return postService.getPost(id)
+    fun getPost(
+        @AuthenticationPrincipal userId: Long = -1,
+        @PathVariable id: Long
+    ): PostDetailDTOv2 {
+        return postService.getPost(userId, id)
     }
 
     @PutMapping("/{id}")
