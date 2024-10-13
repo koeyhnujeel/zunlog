@@ -103,8 +103,8 @@ class PostRepositoryCustomImpl(
         val builder = BooleanBuilder()
 
         when (condition) {
-            "title" -> builder.and(FullTextSearch.match(post.title, value))
-//            "title" -> builder.and(post.title.contains(value))
+//            "title" -> builder.and(FullTextSearch.match(post.title, value))
+            "title" -> builder.and(post.title.contains(value))
             "writer" -> builder.and(post.user.nickname.eq(value))
         }
 
