@@ -94,7 +94,7 @@ class PostRepositoryCustomImpl(
             .fetch()
 
         val pageable = PageRequest.of(pageDTO.targetPage, pageDTO.size.toInt())
-        val total = pageInfo.totalElements
+        val total = postCacheRepository.countTotalPosts()
 
         return PageImpl(content, pageable, total)
     }

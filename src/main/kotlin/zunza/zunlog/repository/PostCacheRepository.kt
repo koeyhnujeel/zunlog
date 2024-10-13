@@ -11,12 +11,18 @@ import zunza.zunlog.util.FullTextSearch
 class PostCacheRepository : QuerydslRepositorySupport(Post::class.java) {
     private val post= QPost.post
 
+    @Cacheable(cacheNames = ["totalPosts"])
+    fun countTotalPosts(): Long {
+        return from(post)
+            .select(post.id)
+            .fetchCount()
+    }
+
     @Cacheable(cacheNames = ["searchedPosts"], key = "#value")
     fun countSearchedPosts(value: String): Long {
-        val total = from(post)
+        return from(post)
             .select(post.id)
             .where(FullTextSearch.match(post.title, value))
             .fetchCount()
-        return total
     }
 }
