@@ -43,6 +43,10 @@ dependencies {
     // 더미 데이터 생성기
     implementation("net.datafaker:datafaker:2.4.0")
 
+    // 캐시 설정
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine")
+
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
