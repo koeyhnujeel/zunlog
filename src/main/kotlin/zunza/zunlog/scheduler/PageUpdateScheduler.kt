@@ -10,7 +10,7 @@ class PageUpdateScheduler(
     private val postRepository: PostRepository
 ) {
 
-    @Scheduled(fixedRate = 300000)
+//    @Scheduled(fixedRate = 300000)
     fun updateTotalElements() {
         val totalElements = postRepository.count()
         pageInfo.updatedTotalElements(totalElements)
