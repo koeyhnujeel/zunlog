@@ -238,3 +238,10 @@ data class ErrorDTO(
     val errorField: String,
     val code: Int
 )
+
+data class PageDTO(
+    val currentPage: Int,
+    val targetPage: Int,
+    val size: Long,
+    val lastPostId: Int,
+)

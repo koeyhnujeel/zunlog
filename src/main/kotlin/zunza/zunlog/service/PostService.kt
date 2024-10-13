@@ -29,12 +29,16 @@ class PostService(
         eventPublisher.publishEvent(PostEvent(user.id, user.nickname, savedPost.id))
     }
 
-    fun getPostList(pageable: Pageable): List<PostListDTO> {
+    fun getPostListV1(pageable: Pageable): Page<PostListDTO> {
         return postRepository.findPostList(pageable)
     }
 
-    fun search(condition: String, value: String, pageable: Pageable): Page<PostListDTO> {
-        return postRepository.findPostByCondition(condition, value, pageable)
+    fun getPostListV2(pageDTO: PageDTO): Page<PostListDTO> {
+        return postRepository.findPostListWithNoOffset(pageDTO)
+    }
+
+    fun search(condition: String, value: String, pageDTO: PageDTO): Page<PostListDTO> {
+        return postRepository.findPostByCondition(condition, value, pageDTO)
     }
 
     fun getPost(userId: Long, id: Long): PostDetailDTOv2 {

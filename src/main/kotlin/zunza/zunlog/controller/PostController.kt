@@ -35,15 +35,28 @@ class PostController(
         postService.writePost(createPostDTO)
     }
 
+//    @GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    fun getPostsV1(
+//        @RequestParam page: Int = 1,
+//        @RequestParam size: Int = 25
+//    ): Page<PostListDTO> {
+//
+//        val pageable = PageRequest.of(page - 1, size)
+//        return postService.getPostListV1(pageable)
+//    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    fun getPosts(
-        @RequestParam page: Int = 1,
-        @RequestParam size: Int = 25
-    ): List<PostListDTO> {
+    fun getPostsV2(
+        @RequestParam currentPage: Int = 1,
+        @RequestParam targetPage: Int = 0,
+        @RequestParam size: Long = 25L,
+        @RequestParam lastPostId: Int = 0
+    ): Page<PostListDTO> {
 
-        val pageable = PageRequest.of(page - 1, size)
-        return postService.getPostList(pageable)
+        val pageDTO = PageDTO(currentPage, targetPage, size, lastPostId)
+        return postService.getPostListV2(pageDTO)
     }
 
     @GetMapping("/search")
@@ -51,12 +64,14 @@ class PostController(
     fun searchPosts(
         @RequestParam condition: String = "title",
         @RequestParam value: String = "",
-        @RequestParam page: Int = 1,
-        @RequestParam size: Int = 10
+        @RequestParam currentPage: Int = 1,
+        @RequestParam targetPage: Int = 0,
+        @RequestParam size: Long = 25L,
+        @RequestParam lastPostId: Int = 0
     ): Page<PostListDTO> {
 
-        val pageable = PageRequest.of(page - 1, size)
-        return postService.search(condition, value, pageable)
+        val pageDTO = PageDTO(currentPage, targetPage, size, lastPostId)
+        return postService.search(condition, value, pageDTO)
     }
 
     @GetMapping("/{id}")

@@ -16,33 +16,35 @@ import zunza.zunlog.dto.*
 import zunza.zunlog.model.Post
 import zunza.zunlog.model.QComment
 import zunza.zunlog.model.QPost
-import zunza.zunlog.model.QPostLike
 import zunza.zunlog.model.QUser
+import zunza.zunlog.scheduler.PageInfo
 import zunza.zunlog.util.FullTextSearch
+import kotlin.math.absoluteValue
 
 @Repository
 interface PostRepository : JpaRepository<Post, Long>, PostRepositoryCustom
 
 interface PostRepositoryCustom {
-    fun findPostList(pageable: Pageable): List<PostListDTO>
-    fun findPostByCondition(condition: String, value: String, pageable: Pageable): Page<PostListDTO>
+    fun findPostList(pageable: Pageable): Page<PostListDTO>
+    fun findPostByCondition(condition: String, value: String, pageDTO: PageDTO): Page<PostListDTO>
     fun findByIdWithUserAndCommentV1(postId: Long): PostDetailDTOv1?
     fun findByIdWithUserAndCommentV2(userId: Long, postId: Long): PostDetailDTOv2?
+    fun findPostListWithNoOffset(pageDTO: PageDTO): Page<PostListDTO>
 }
 
 class PostRepositoryCustomImpl(
     private val jpaQueryFactory: JPAQueryFactory,
     private val commentRepository: CommentRepository,
-    private val likeRepository: LikeRepository
+    private val likeRepository: LikeRepository,
+    private val pageInfo: PageInfo
 ) : PostRepositoryCustom, QuerydslRepositorySupport(Post::class.java) {
 
     private val post = QPost.post
     private val user = QUser.user
     private val comment = QComment.comment
-    private val like = QPostLike.postLike
 
-    override fun findPostList(pageable: Pageable): List<PostListDTO> {
-        return from(post)
+    override fun findPostList(pageable: Pageable): Page<PostListDTO> {
+        val queryResult = from(post)
             .select(
                 Projections.constructor(
                     PostListDTO::class.java,
@@ -56,22 +58,22 @@ class PostRepositoryCustomImpl(
                 )
             )
             .leftJoin(post.user, user)
-            .orderBy(post.createdDt.desc())
+            .orderBy(post.id.desc())
             .limit(pageable.pageSize.toLong())
             .offset(pageable.offset)
-            .fetch()
+            .fetchResults()
+
+        val content = queryResult.results
+        val total = queryResult.total
+
+        return PageImpl(content, pageable, total)
     }
 
-    override fun findPostByCondition(condition: String, value: String, pageable: Pageable): Page<PostListDTO> {
+    override fun findPostListWithNoOffset(pageDTO: PageDTO): Page<PostListDTO> {
         val builder = BooleanBuilder()
+        buildKeySetPaginationPredicate(pageDTO, builder)
 
-        when (condition) {
-            "title" -> builder.and(FullTextSearch.match(post.title, value))
-//            "title" -> builder.and(post.title.contains(value))
-            "writer" -> builder.and(post.user.nickname.eq(value))
-        }
-
-        val queryResult = from(post)
+        val content = from(post)
             .select(
                 Projections.constructor(
                     PostListDTO::class.java,
@@ -87,14 +89,63 @@ class PostRepositoryCustomImpl(
             .leftJoin(post.user, user)
             .where(builder)
             .orderBy(post.id.desc())
-            .limit(pageable.pageSize.toLong())
-            .offset(pageable.offset)
-            .fetchResults()
+            .limit(pageDTO.size)
+            .fetch()
 
-        val content = queryResult.results
-        val total = queryResult.total
+        val pageable = PageRequest.of(pageDTO.targetPage, pageDTO.size.toInt())
+        val total = pageInfo.totalElements
 
         return PageImpl(content, pageable, total)
+    }
+
+    override fun findPostByCondition(condition: String, value: String, pageDTO: PageDTO): Page<PostListDTO> {
+        val builder = BooleanBuilder()
+
+        when (condition) {
+            "title" -> builder.and(FullTextSearch.match(post.title, value))
+//            "title" -> builder.and(post.title.contains(value))
+            "writer" -> builder.and(post.user.nickname.eq(value))
+        }
+
+        buildKeySetPaginationPredicate(pageDTO, builder)
+
+        val content = from(post)
+            .select(
+                Projections.constructor(
+                    PostListDTO::class.java,
+                    post.id,
+                    post.title,
+                    post.summary,
+                    user.nickname,
+                    post.likes.size(),
+                    post.comments.size(),
+                    post.createdDt
+                )
+            )
+            .leftJoin(post.user, user)
+            .where(builder)
+            .orderBy(post.id.desc())
+            .limit(pageDTO.size)
+            .fetch()
+
+        val pageable = PageRequest.of(pageDTO.targetPage, pageDTO.size.toInt())
+        val total = pageInfo.totalElements
+
+        return PageImpl(content, pageable, total)
+    }
+
+    private fun buildKeySetPaginationPredicate(pageDTO: PageDTO, builder: BooleanBuilder) {
+        val interval = (pageDTO.currentPage - pageDTO.targetPage).absoluteValue
+
+        with(builder) {
+            if (pageDTO.lastPostId != 0) {
+                if (pageDTO.targetPage > pageDTO.currentPage) {
+                    and(post.id.lt(pageDTO.lastPostId - (interval - 1) * pageDTO.size))
+                } else {
+                    and(post.id.lt(pageDTO.lastPostId + (interval + 1) * pageDTO.size))
+                }
+            }
+        }
     }
 
     override fun findByIdWithUserAndCommentV1(postId: Long): PostDetailDTOv1? {
