@@ -36,6 +36,7 @@ class PostRepositoryCustomImpl(
     private val jpaQueryFactory: JPAQueryFactory,
     private val commentRepository: CommentRepository,
     private val likeRepository: LikeRepository,
+    private val postCacheRepository: PostCacheRepository,
     private val pageInfo: PageInfo
 ) : PostRepositoryCustom, QuerydslRepositorySupport(Post::class.java) {
 
@@ -129,7 +130,7 @@ class PostRepositoryCustomImpl(
             .fetch()
 
         val pageable = PageRequest.of(pageDTO.targetPage, pageDTO.size.toInt())
-        val total = pageInfo.totalElements
+        val total = postCacheRepository.countSearchedPosts(value)
 
         return PageImpl(content, pageable, total)
     }
