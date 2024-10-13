@@ -9,7 +9,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 @Configuration
 class AsyncConfig {
 
-    @Bean
+    @Bean("eventExecutor")
     fun executor(): ThreadPoolTaskExecutor {
         return ThreadPoolTaskExecutor().apply {
             corePoolSize = 5

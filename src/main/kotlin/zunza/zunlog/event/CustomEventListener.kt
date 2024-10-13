@@ -10,7 +10,7 @@ class CustomEventListener(
     private val notificationService: NotificationService,
 ) {
 
-    @Async
+    @Async("eventExecutor")
     @EventListener
     fun notifyHandler(customEvent: CustomEvent) {
         when (customEvent.getType()) {
